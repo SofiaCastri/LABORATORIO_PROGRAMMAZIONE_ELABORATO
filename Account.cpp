@@ -56,3 +56,23 @@ vector<Transaction> Account::searchTransactionByType(TransactionType type) const
     }
     return filteredTransactions;
 }
+
+double Account::getTotalIncoming() const {
+    double total = 0.0;
+    for (const auto& t : transactions) {
+        if (t.getType() == TransactionType::Incoming) {
+            total += t.getAmount(); // somma solo le entrate
+        }
+    }
+    return total;
+}
+
+double Account::getTotalOutgoing() const {
+    double total = 0.0;
+    for (const auto& t : transactions) {
+        if (t.getType() == TransactionType::Outgoing) {
+            total += t.getAmount(); // somma solo le uscite
+        }
+    }
+    return total;
+}
