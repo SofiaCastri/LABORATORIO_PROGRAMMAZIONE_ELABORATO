@@ -15,11 +15,16 @@ TEST(TransactionTest, ConstructorValid) {
     EXPECT_EQ(t.getDescription(), "Deposit");
 }
 
-//Verifica che il costruttore lanci un’eccezione se l’importo è negativo o zero.
-TEST(TransactionTest, ConstructorInvalidAmount) {
+//Verifica che il costruttore lanci un’eccezione se l’importo è negativo
+TEST(TransactionTest, ConstructorNegativeAmountThrows) {
     EXPECT_THROW(Transaction t1(2, -50.0, TransactionType::Outgoing, "Withdraw"), std::invalid_argument);
+}
+
+//verifica che il costruttore lanci un'eccezione se l'importo è negativo
+TEST(TransactionTest, ConstructorZeroAmountThrows) {
     EXPECT_THROW(Transaction t2(3, 0.0, TransactionType::Incoming, "Zero"), std::invalid_argument);
 }
+
 //Controlla che i setter funzionino correttamente e che i getter restituiscano i valori corretti.
 TEST(TransactionTest, SettersAndGetters) {
     Transaction t(4, 200.0, TransactionType::Outgoing, "Payment");
