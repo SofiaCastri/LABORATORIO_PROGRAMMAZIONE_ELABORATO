@@ -1,2 +1,13 @@
 /cmake-build-debug/
 /.idea/
+/test/lib/googletest
+
+# Ignora file temporanei di sistema
+.DS_Store
+*.swp
+*.tmp
+*.bak
+
+# Ignora cartelle di build, se ce ne sono
+/build/
+/out/
