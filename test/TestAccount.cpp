@@ -75,3 +75,23 @@ TEST(AccountTest, TransferWithInsufficientBalanceThrows) {
 
     EXPECT_THROW(alice.transferTo(-100.0, bob, "Invalid"), std::invalid_argument);
 }
+
+//test totale entrate
+TEST(AccountTest, TotalIncoming) {
+    Account acc("Dora", "IT333", 1000.0);
+    acc.addTransaction(Transaction(1, 100.0, TransactionType::Incoming, "Salary"));
+    acc.addTransaction(Transaction(2, 50.0, TransactionType::Incoming, "Gift"));
+    acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Groceries"));
+
+    EXPECT_DOUBLE_EQ(acc.getTotalIncoming(), 150.0);
+}
+
+// test Totale Uscite
+TEST(AccountTest, TotalOutgoing) {
+    Account acc("Eli", "IT444", 1000.0);
+    acc.addTransaction(Transaction(1, 100.0, TransactionType::Incoming, "Salary"));
+    acc.addTransaction(Transaction(2, 50.0, TransactionType::Outgoing, "Rent"));
+    acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Utilities"));
+
+    EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
+}
