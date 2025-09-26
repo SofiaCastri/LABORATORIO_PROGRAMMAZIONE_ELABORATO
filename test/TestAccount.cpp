@@ -253,3 +253,4 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
     // Verifica che NON ci siano transazioni scritte
     EXPECT_NE(content.find("Nessuna transazione registrata"), std::string::npos);
 }
+

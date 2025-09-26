@@ -139,3 +139,53 @@ void Account::writeAccountToFile(const std::string& filename) const {
     file.close();
 }
 
+
+void Account::loadTransactionsFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Impossibile aprire il file " + filename);
+    }
+
+    std::string line;
+    int currentId = 0;
+    bool readingTransaction = false;
+
+    while (std::getline(file, line)) {
+        if (line.find("Transaction:") != std::string::npos) {
+            readingTransaction = true;
+            currentId = 0;
+            continue;
+        }
+
+        if (readingTransaction && line.find("ID: ") != std::string::npos) {
+            currentId = std::stoi(line.substr(4));
+
+            // Controlla se esiste già
+            bool exists = false;
+            for (const auto& t : transactions) {
+                if (t.getTransactionId() == currentId) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            // Se non esiste, leggila SUBITO
+            if (!exists && currentId != 0) {
+                try {
+                    Transaction reader(0, 1.0, TransactionType::Incoming, "temp");
+                    Transaction newTrans = reader.readTransactionFromFile(filename, currentId);
+                    addTransaction(newTrans);
+                    std::cout << "Aggiunta transazione ID: " << currentId << std::endl;
+                } catch (const std::exception& e) {
+                    std::cerr << "Errore transazione " << currentId << ": " << e.what() << std::endl;
+                }
+            }
+        }
+
+        if (line.find("----------------------") != std::string::npos) {
+            readingTransaction = false;
+        }
+    }
+
+    file.close();
+}
