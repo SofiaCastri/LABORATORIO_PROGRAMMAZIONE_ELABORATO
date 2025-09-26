@@ -105,3 +105,28 @@ TEST(TransactionTest, ReadTransactionFromFileValid) {
 
     std::remove(filename.c_str());
 }
+
+TEST(TransactionTest, ReadTransactionFromFileThrowsWhenNotFound) {
+    std::string filename = "test_not_found.txt";
+    std::ofstream(filename, std::ios::trunc).close();
+
+    // Salva una transazione con ID 500
+    Transaction t(500, 150.0, TransactionType::Outgoing, "Esistente");
+    t.writeTransactionToFile(filename);
+
+    // Cerca una transazione con ID diverso (inesistente) - dovrebbe lanciare eccezione
+    Transaction temp(0, 1.0, TransactionType::Incoming, "dummy");
+
+    try {
+        Transaction readTransaction = temp.readTransactionFromFile(filename, 999);
+        FAIL() << "Avrebbe dovuto lanciare un'eccezione per transazione non trovata";
+    } catch (const std::runtime_error& e) {
+        // Verifica che il messaggio di errore contenga informazioni utili
+        EXPECT_NE(std::string(e.what()).find("Transazione con ID 999 non trovata"), std::string::npos);
+        std::cout << "Eccezione correttamente lanciata: " << e.what() << std::endl;
+    } catch (...) {
+        FAIL() << "Avrebbe dovuto lanciare std::runtime_error";
+    }
+
+    std::remove(filename.c_str());
+}
