@@ -51,13 +51,43 @@ std::string Transaction::getDescription() const {
 }
 
 //setter
-void Transaction::setAmount(double amount) {
-    Transaction::amount = amount;
+void Transaction::setAmount(double amt) {
+    Transaction::amount = amt;
 }
 
-void Transaction::setDescription(const std::string &description) {
-    Transaction::description = description;
+void Transaction::setDescription(const std::string &descpt) {
+    Transaction::description = descpt;
 }
+
+void Transaction::setTransactionId(const int Id) {
+    Transaction::transactionId = Id;
+}
+
+void Transaction::setType(const TransactionType tp) {
+    Transaction::type = tp;
+}
+
+void Transaction::setDate(const string& dt) {
+
+    // Controllo validità della nuova data
+    std::tm tm = {};
+    std::istringstream ss(dt);
+
+    ss >> std::get_time(&tm, "%d-%m-%Y %H:%M:%S");
+
+    if (ss.fail()) {
+    throw std::invalid_argument("Formato del date non valido");
+    }
+
+    tm.tm_isdst = -1;  // Lascia che il sistema decida se è ora legale
+    if (mktime(&tm) == -1) {
+    throw std::invalid_argument("Valori del date non validi");
+    }
+
+    // setter
+    Transaction::date = dt;
+}
+
 
 std::string Transaction::transactiontoString() const {
     std::ostringstream oss;
@@ -80,3 +110,66 @@ void Transaction::writeTransactionToFile(const std::string& filename) const {
     }
 }
 
+
+
+Transaction Transaction::readTransactionFromFile(const std::string& filename, int targetId) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Impossibile aprire il file " + filename);
+    }
+
+    std::string line;
+    // Variabili temporanee per memorizzare i dati
+    int id = 0;
+    double amt = 0.0;
+    TransactionType tp = TransactionType::Outgoing;
+    std::string dt;
+    std::string descpt;
+
+    bool found = false;
+    bool readingTransaction = false;
+
+    while (std::getline(file, line)) {
+        if (line.find("Transaction:") != std::string::npos) {
+            readingTransaction = true;
+            continue;
+        }
+
+        if (readingTransaction) {
+            if (line.find("ID: ") != std::string::npos) {
+                id = std::stoi(line.substr(4));
+                if (id == targetId) {
+                    found = true;
+                }
+            }
+            else if (found && line.find("Amount: ") != std::string::npos) {
+                amt = std::stod(line.substr(8));
+            }
+            else if (found && line.find("Type: ") != std::string::npos) {
+                std::string typeStr = line.substr(6);
+                tp = (typeStr == "Incoming" ? TransactionType::Incoming : TransactionType::Outgoing);
+            }
+            else if (found && line.find("Date: ") != std::string::npos) {
+                dt = line.substr(6);
+            }
+            else if (found && line.find("Description: ") != std::string::npos) {
+                descpt = line.substr(13);
+            }
+            else if (line.find("----------------------") != std::string::npos && found) {
+                break; // Fine della transazione
+            }
+        }
+    }
+
+    file.close();
+
+    if (!found) {
+        throw std::runtime_error("Transazione con ID " + std::to_string(targetId) + " non trovata");
+    }
+
+    // ORA creiamo la transazione con tutti i dati raccolti
+    Transaction transaction(id, amt, tp, descpt);
+    transaction.setDate(dt); // Impostiamo la data separatamente
+
+    return transaction;
+}

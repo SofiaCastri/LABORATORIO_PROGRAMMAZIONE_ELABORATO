@@ -25,12 +25,17 @@ public:
     std::string getDescription() const;
 
     // setter
-    void setAmount(double amount);
-    void setDescription(const std::string& description) ;
+    void setAmount(double amt);
+    void setDescription(const std::string& descpt) ;
+    void setTransactionId(const int Id);
+    void setType(const TransactionType tp);
+    void setDate(const string& dt);
+
 
     //metodi per I/O
     std::string transactiontoString() const; // Metodo per rappresentare una transazione come stringa leggibile
     void writeTransactionToFile(const std::string& filename) const; //metodo scrittura di una transazione su file di testo
+    Transaction readTransactionFromFile(const std::string& filename, int transactionId);
 
 
 private:
