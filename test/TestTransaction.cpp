@@ -40,3 +40,16 @@ TEST(TransactionTest, SettersAndGetters) {
     EXPECT_DOUBLE_EQ(t.getAmount(), 300.0);
     EXPECT_EQ(t.getDescription(), "Updated Payment");
 }
+
+
+TEST(TransactionTest, ToStringContainsAllFields) {
+    Transaction t(123, 250.50, TransactionType::Incoming, "Salary");
+
+    std::string str = t.transactiontoString();
+
+    EXPECT_NE(str.find("123"), std::string::npos);
+    EXPECT_NE(str.find("250.5"), std::string::npos);
+    EXPECT_NE(str.find("Incoming"), std::string::npos);
+    EXPECT_NE(str.find("Salary"), std::string::npos);
+    EXPECT_NE(str.find("-"), std::string::npos);// Verifica che la stringa contenga la data (presenza di "-" come separatore)
+}
