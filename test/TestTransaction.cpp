@@ -52,7 +52,7 @@ TEST(TransactionTest, ToStringContainsAllFields) {
     EXPECT_NE(str.find("250.5"), std::string::npos);
     EXPECT_NE(str.find("Incoming"), std::string::npos);
     EXPECT_NE(str.find("Salary"), std::string::npos);
-    EXPECT_NE(str.find("-"), std::string::npos);// Verifica che la stringa contenga la data (presenza di "-" come separatore)
+    EXPECT_NE(str.find(std::string("-")), std::string::npos); // Verifica che la stringa contenga la data (presenza di "-" come separatore)
 }
 
 // Test che verifica la scrittura su file di una transazione
