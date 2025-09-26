@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <ctime>
+#include <iomanip>
 
 Account::Account(const string &name, const string &iban, double balance) : name(name), iban(iban), balance(balance){}
 
@@ -85,6 +87,42 @@ double Account::getTotalOutgoing() const {
     return total;
 }
 
+
+time_t Account::stringToTime(const std::string& datetimeStr) {
+    std::tm tm = {};
+    std::istringstream ss(datetimeStr);
+    ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
+
+    if (ss.fail()) {
+        throw std::invalid_argument("Formato data non valido: " + datetimeStr);
+    }
+
+    return std::mktime(&tm);
+}
+
+std::vector<Transaction> Account::getTransactionsByDateRange(const std::string& fromDate, const std::string& toDate) const {
+    std::vector<Transaction> results;
+
+    // Converti le date di input
+    time_t fromTime = stringToTime(fromDate);
+    time_t toTime = stringToTime(toDate);
+
+    // Validazione
+    if (fromTime > toTime) {
+        throw std::invalid_argument("La data di inizio deve essere precedente alla data di fine");
+    }
+
+    // Filtra le transazioni
+    for (const auto& transaction : transactions) {
+        time_t transTime = stringToTime(transaction.getDate());
+
+        if (transTime >= fromTime && transTime <= toTime) {
+            results.push_back(transaction);
+        }
+    }
+
+    return results;
+}
 
 void Account::writeTransactionsToFile(const std::string& filename) const {
     if (transactions.empty()) {
