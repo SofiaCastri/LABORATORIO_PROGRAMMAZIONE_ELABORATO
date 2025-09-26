@@ -22,12 +22,17 @@ double Account::getBalance() const {
 
 void Account::addTransaction(const Transaction& t) {
     transactions.push_back(t);
-
-    if (t.getType() == TransactionType::Incoming)
+    if (t.getType() == TransactionType::Incoming) {
         balance += t.getAmount();
-    else
+    } else {
+        if (balance < t.getAmount()) {
+            transactions.pop_back();//  saldo insufficiente: rimuoviamo la transazione appena aggiunta (annulliamo l'operazione)
+            throw std::runtime_error("Saldo insufficiente per registrare la transazione");
+        }
         balance -= t.getAmount();
+    }
 }
+
 
 
 // Trasferimento tra conti
