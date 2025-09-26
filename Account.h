@@ -18,6 +18,7 @@ public: Account(const std::string& name, const std::string& iban, double balance
     std::string getName() const;
     std::string getIban() const;
     double getBalance() const;
+    int getTransactionSize() const;
 
 
     //metodi principali

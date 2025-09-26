@@ -22,6 +22,10 @@ double Account::getBalance() const {
     return balance;
 }
 
+int Account::getTransactionSize() const {
+    return static_cast<int>(transactions.size());
+}
+
 
 void Account::addTransaction(const Transaction& t) {
     transactions.push_back(t);

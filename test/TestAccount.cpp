@@ -254,3 +254,27 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
     EXPECT_NE(content.find("Nessuna transazione registrata"), std::string::npos);
 }
 
+TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
+    std::string filename = "test_duplicates.txt";
+    std::ofstream(filename, std::ios::trunc).close();
+
+    Transaction t1(400, 100.0, TransactionType::Incoming, "Bonus");
+    Transaction t2(500, 25.0, TransactionType::Outgoing, "Caffè");
+
+    t1.writeTransactionToFile(filename);
+    t2.writeTransactionToFile(filename);
+
+    Account account("Luigi", "IT456", 500.0);
+
+    // Prima caricamento
+    account.loadTransactionsFromFile(filename);
+    EXPECT_EQ(account.getTransactionSize(), 2); // Ora puoi usare getTransactionSize()
+    EXPECT_DOUBLE_EQ(account.getBalance(), 575.0); // 500 + 100 - 25
+
+    // Secondo caricamento - le transazioni dovrebbero essere saltate
+    account.loadTransactionsFromFile(filename);
+    EXPECT_EQ(account.getTransactionSize(), 2); // Stesso numero, no duplicati
+    EXPECT_DOUBLE_EQ(account.getBalance(), 575.0); // Saldo invariato
+
+    std::remove(filename.c_str());
+}
