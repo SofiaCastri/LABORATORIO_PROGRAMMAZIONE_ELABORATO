@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 #include "../Account.h"
 #include "../Transaction.h"
+#include <fstream>
 
 // Test costruttore e getter
 TEST(AccountTest, ConstructorAndGetters) {
@@ -110,4 +111,54 @@ TEST(AccountTest, TotalOutgoing) {
     acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Utilities"));
 
     EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
+}
+
+TEST(AccountTest, WriteTransactionsToFile) {
+    Account acc("Test User", "IT99999", 1000.0);
+
+    // Creo alcune transazioni
+    Transaction t1(1, 200.0, TransactionType::Incoming, "Stipendio");
+    Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa alimentare");
+
+    acc.addTransaction(t1);
+    acc.addTransaction(t2);
+
+    std::string filename = "file_transazioni_account_test.txt";
+    std::ofstream(filename, std::ios::trunc).close();// Pulisco eventuale file precedente
+
+    acc.writeTransactionsToFile(filename); // Scrivo le transazioni su file usando il metodo della classe Account
+    ASSERT_TRUE(std::filesystem::exists(filename));
+    std::ifstream file(filename);
+    ASSERT_TRUE(file.is_open());
+
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    // Controllo che contenga le informazioni delle due transazioni
+    EXPECT_NE(content.find("ID: 1"), std::string::npos);
+    EXPECT_NE(content.find("ID: 2"), std::string::npos);
+    EXPECT_NE(content.find("Stipendio"), std::string::npos);
+    EXPECT_NE(content.find("Spesa alimentare"), std::string::npos);
+    EXPECT_NE(content.find("Incoming"), std::string::npos);
+    EXPECT_NE(content.find("Outgoing"), std::string::npos);
+}
+
+
+TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
+    Account acc("Empty User", "IT00000", 500.0);
+
+    std::string filename = "file_transazioni_account_vuoto.txt";
+    std::ofstream(filename, std::ios::trunc).close();
+
+    acc.writeTransactionsToFile(filename);
+
+    ASSERT_TRUE(std::filesystem::exists(filename));
+    std::ifstream file(filename);
+    ASSERT_TRUE(file.is_open());
+
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    // Controllo che il file sia vuoto
+    EXPECT_TRUE(content.empty());
 }
