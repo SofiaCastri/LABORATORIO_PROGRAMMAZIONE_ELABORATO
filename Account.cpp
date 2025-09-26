@@ -4,6 +4,8 @@
 
 #include "Account.h"
 #include <iostream>
+#include <sstream>
+#include <fstream>
 
 Account::Account(const string &name, const string &iban, double balance) : name(name), iban(iban), balance(balance){}
 
@@ -95,4 +97,25 @@ void Account::writeTransactionsToFile(const std::string& filename) const {
     }
 
     std::cout << "Tutte le transazioni sono state salvate su file: " << filename << std::endl;
+}
+
+
+std::string Account::accountToString() const {
+    std::ostringstream oss;
+    oss << "Account:\n";
+    oss << "Name: " << name << "\n";
+    oss << "IBAN: " << iban << "\n";
+    oss << "Balance: " << balance << "\n";
+
+    // Stampa tutte le transazioni convertendole in stringa
+    if (transactions.empty()) {
+        oss << "No transactions.\n";
+    } else {
+        oss << "Transactions:\n";
+        for (const auto& t : transactions) {
+            oss << t.transactiontoString() << "\n";
+        }
+    }
+
+    return oss.str();
 }
