@@ -60,11 +60,15 @@ TEST(TransactionTest, WriteTransactionToFile) {
     Transaction t(1, 150.0, TransactionType::Incoming, "Test deposit");
 
     std::string filename = "test_transaction.txt";
-    std::ofstream(filename, std::ios::trunc).close();// Pulisce eventuale file esistente
+    std::ofstream(filename, std::ios::trunc).close(); // Pulisce eventuale file esistente
 
     t.writeTransactionToFile(filename);
 
-    std::ifstream file(filename); // Legge il contenuto del file
+    std::cout << "File creato in: " << std::filesystem::absolute(filename) << std::endl; // Stampa il percorso assoluto per sapere dove viene creato il file
+
+    ASSERT_TRUE(std::filesystem::exists(filename)); // Verifica che il file esista
+
+    std::ifstream file(filename);// Legge il contenuto del file
     ASSERT_TRUE(file.is_open());
 
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -75,4 +79,6 @@ TEST(TransactionTest, WriteTransactionToFile) {
     EXPECT_NE(content.find("Amount: 150"), std::string::npos);
     EXPECT_NE(content.find("Type: Incoming"), std::string::npos);
     EXPECT_NE(content.find("Description: Test deposit"), std::string::npos);
+
+    std::remove(filename.c_str()); // Rimuove il file dopo il test
 }
