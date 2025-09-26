@@ -1,32 +1,25 @@
 #include <iostream>
+#include <fstream>
 #include "Account.h"
 #include "Transaction.h"
 
 int main() {
 
     try {
-        // Creo due conti
-        Account acc1("Alice", "IT12345", 1000.0);
-        Account acc2("Bob", "IT67890", 500.0);
+        std::string filename = "transazioni_main.txt";
 
-        std::cout << "Saldo iniziale Alice: " << acc1.getBalance() << std::endl;
-        std::cout << "Saldo iniziale Bob: " << acc2.getBalance() << std::endl;
+        // Pulisco il file all’inizio del programma per evitare duplicati
+        std::ofstream(filename, std::ios::trunc).close();
 
-        // Aggiungo una transazione manuale su Alice
+        // Creo alcune transazioni
         Transaction t1(1, 200.0, TransactionType::Incoming, "Stipendio");
-        acc1.addTransaction(t1);
+        Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa alimentare");
 
-        std::cout << "Saldo Alice dopo transazione: " << acc1.getBalance() << std::endl;
+        // Salvo le transazioni su file
+        t1.writeTransactionToFile(filename);
+        t2.writeTransactionToFile(filename);
 
-        // Trasferimento da Alice a Bob
-        acc1.transferTo(150.0, acc2, "Pagamento affitto");
-
-        std::cout << "Saldo Alice dopo trasferimento: " << acc1.getBalance() << std::endl;
-        std::cout << "Saldo Bob dopo trasferimento: " << acc2.getBalance() << std::endl;
-
-        // Cerco le transazioni in entrata di Alice
-        auto incomingAlice = acc1.searchTransactionByType(TransactionType::Incoming);
-        std::cout << "Transazioni in entrata di Alice: " << incomingAlice.size() << std::endl;
+        std::cout << "Transazioni salvate su file '" << filename << "'." << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << std::endl;
