@@ -6,8 +6,10 @@
 #include <chrono>
 #include <ctime>
 #include <sstream>
+#include <fstream>
 #include <iomanip>
 #include <stdexcept>
+#include <iostream>
 
 Transaction::Transaction(int id, double amt, TransactionType t, const std::string &desc)
         : transactionId(id), amount(amt), type(t), description(desc)
@@ -67,3 +69,14 @@ std::string Transaction::transactiontoString() const {
         << "Description: " << description << "\n";
     return oss.str();
 }
+
+void Transaction::writeTransactionToFile(const std::string& filename) const {
+    std::ofstream file(filename, std::ios::app); // apertura in modalità append (aggiunge i dati alla fine del file senza cancellare il contenuto precedente)
+    if (file.is_open()) {
+        file << transactiontoString() << "\n----------------------\n";
+        file.close(); // chiude il file per salvare correttamente i dati
+    } else {
+        throw std::runtime_error("Impossibile aprire il file " + filename); //se file non si apre manda messaggio di errore
+    }
+}
+
