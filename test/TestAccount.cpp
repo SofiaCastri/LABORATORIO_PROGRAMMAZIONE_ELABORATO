@@ -162,3 +162,40 @@ TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
     // Controllo che il file sia vuoto
     EXPECT_TRUE(content.empty());
 }
+
+TEST(AccountTest, AccountToStringWithTransactions) {
+    Account acc("Alice", "IT12345", 1000.0);
+
+    Transaction t1(1, 200.0, TransactionType::Incoming, "Salary");
+    Transaction t2(2, 50.0, TransactionType::Outgoing, "Groceries");
+
+    acc.addTransaction(t1);
+    acc.addTransaction(t2);
+
+    std::string str = acc.accountToString();
+
+    // Verifica informazioni generali
+    EXPECT_NE(str.find("Alice"), std::string::npos);
+    EXPECT_NE(str.find("IT12345"), std::string::npos);
+    EXPECT_NE(str.find("1150"), std::string::npos);
+
+    // Verifica che ci siano le transazioni
+    EXPECT_NE(str.find("Salary"), std::string::npos);
+    EXPECT_NE(str.find("Groceries"), std::string::npos);
+    EXPECT_NE(str.find("Incoming"), std::string::npos);
+    EXPECT_NE(str.find("Outgoing"), std::string::npos);
+}
+
+TEST(AccountTest, AccountToStringNoTransactions) {
+    Account acc("Bob", "IT67890", 500.0);
+
+    std::string str = acc.accountToString();
+
+    // Verifica informazioni generali
+    EXPECT_NE(str.find("Bob"), std::string::npos);
+    EXPECT_NE(str.find("IT67890"), std::string::npos);
+    EXPECT_NE(str.find("500"), std::string::npos);
+
+    // Verifica messaggio transazioni vuote
+    EXPECT_NE(str.find("No transactions"), std::string::npos);
+}
