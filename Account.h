@@ -30,6 +30,7 @@ public: Account(const std::string& name, const std::string& iban, double balance
     //metodi per scrivere su file
     void writeTransactionsToFile(const std::string& filename) const;
     std::string accountToString() const;
+    void writeAccountToFile(const std::string& filename) const;
 
 private:
     string name; // Nome del titolare

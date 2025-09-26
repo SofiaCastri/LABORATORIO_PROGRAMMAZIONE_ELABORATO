@@ -120,5 +120,14 @@ std::string Account::accountToString() const {
     return oss.str();
 }
 
+void Account::writeAccountToFile(const std::string& filename) const {
+    std::ofstream file(filename, std::ios::app); // apertura in modalità append
+    if (!file.is_open()) {
+        throw std::runtime_error("Impossibile aprire il file " + filename);
+    }
 
+    // Usa accountToString() per convertire in stringa e scrivere su file
+    file << accountToString() << "\n=====================\n";
+    file.close();
+}
 
