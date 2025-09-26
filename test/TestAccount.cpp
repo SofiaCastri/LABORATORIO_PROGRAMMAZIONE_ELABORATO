@@ -199,3 +199,57 @@ TEST(AccountTest, AccountToStringNoTransactions) {
     // Verifica messaggio transazioni vuote
     EXPECT_NE(str.find("No transactions"), std::string::npos);
 }
+
+// Test: scrittura account con transazioni
+TEST(AccountTest, WriteAccountToFileWithTransactions) {
+    Account acc("Alice", "IT12345", 1000.0);
+    Transaction t1(1, 200.0, TransactionType::Incoming, "Stipendio");
+    Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa alimentare");
+
+    acc.addTransaction(t1);
+    acc.addTransaction(t2);
+
+    std::string filename = "test_account_with_transactions.txt";
+    std::ofstream(filename, std::ios::trunc).close(); // reset file
+
+    // Scrivo su file
+    acc.writeAccountToFile(filename);
+
+    // Verifico che il file esista
+    ASSERT_TRUE(std::filesystem::exists(filename));
+
+    // Leggo il contenuto
+    std::ifstream file(filename);
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    // Controlli sul contenuto
+    EXPECT_NE(content.find("Alice"), std::string::npos);
+    EXPECT_NE(content.find("IT12345"), std::string::npos);
+    EXPECT_NE(content.find("1150"), std::string::npos);
+    EXPECT_NE(content.find("Stipendio"), std::string::npos);
+    EXPECT_NE(content.find("Spesa alimentare"), std::string::npos);
+}
+
+// Test: scrittura account senza transazioni
+TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
+    Account acc("Bob", "IT67890", 500.0);
+
+    std::string filename = "test_account_without_transactions.txt";
+    std::ofstream(filename, std::ios::trunc).close(); // reset file
+
+    acc.writeAccountToFile(filename);
+
+    ASSERT_TRUE(std::filesystem::exists(filename));
+
+    std::ifstream file(filename);
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    EXPECT_NE(content.find("Bob"), std::string::npos);
+    EXPECT_NE(content.find("IT67890"), std::string::npos);
+    EXPECT_NE(content.find("500"), std::string::npos);
+
+    // Verifica che NON ci siano transazioni scritte
+    EXPECT_EQ(content.find("Transaction:"), std::string::npos);
+}
