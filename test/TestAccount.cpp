@@ -40,6 +40,22 @@ TEST(AccountTest, AddTransactionOutgoing) {
     EXPECT_EQ(transactions[0].getDescription(), "Payment");
 }
 
+// Test addTransaction con Outgoing che supera il saldo
+TEST(AccountTest, AddTransactionOutgoingInsufficientBalanceThrows) {
+    Account acc("Diana", "IT999", 100.0);
+    Transaction t(3, 200.0, TransactionType::Outgoing, "Big Payment");
+
+    EXPECT_THROW(acc.addTransaction(t), std::runtime_error);
+
+    // Dopo il fallimento, il saldo deve restare invariato
+    EXPECT_DOUBLE_EQ(acc.getBalance(), 100.0);
+
+    // E non deve esserci nessuna transazione salvata
+    auto transactions = acc.searchTransactionByType(TransactionType::Outgoing);
+    EXPECT_TRUE(transactions.empty());
+}
+
+
 // Test transferTo con successo
 TEST(AccountTest, TransferToSuccess) {
     Account alice("Alice", "IT111", 1000.0);
