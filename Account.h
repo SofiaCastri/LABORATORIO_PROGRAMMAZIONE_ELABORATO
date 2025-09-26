@@ -26,7 +26,6 @@ public: Account(const std::string& name, const std::string& iban, double balance
     std::vector<Transaction> searchTransactionByType(TransactionType type) const;
     double getTotalIncoming() const; // Calcola il totale di tutte le transazioni in entrata
     double getTotalOutgoing() const; // Calcola il totale di tutte le transazioni in uscita
-    std::vector<Transaction> getTransactionsByDateRange(const std::string& fromDate, const std::string& toDate) const; //metodo per filtrare le transazioni per data
 
     //metodi per scrivere su file
     void writeTransactionsToFile(const std::string& filename) const;
@@ -38,9 +37,6 @@ private:
     string iban; // IBAN del conto
     double balance; // Saldo corrente
     vector<Transaction> transactions; // Lista delle transazioni
-
-    // Helper per conversione data
-    static time_t stringToTime(const std::string& datetimeStr);
 
 };
 
