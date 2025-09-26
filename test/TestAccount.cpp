@@ -197,7 +197,7 @@ TEST(AccountTest, AccountToStringNoTransactions) {
     EXPECT_NE(str.find("500"), std::string::npos);
 
     // Verifica messaggio transazioni vuote
-    EXPECT_NE(str.find("No transactions"), std::string::npos);
+    EXPECT_NE(str.find("Nessuna transazione registrata"), std::string::npos);
 }
 
 // Test: scrittura account con transazioni
@@ -251,5 +251,5 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
     EXPECT_NE(content.find("500"), std::string::npos);
 
     // Verifica che NON ci siano transazioni scritte
-    EXPECT_EQ(content.find("Transaction:"), std::string::npos);
+    EXPECT_NE(content.find("Nessuna transazione registrata"), std::string::npos);
 }

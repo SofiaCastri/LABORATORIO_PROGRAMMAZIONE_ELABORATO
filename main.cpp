@@ -21,6 +21,19 @@ int main() {
 
         std::cout << "Transazioni salvate su file '" << filename << "'." << std::endl;
 
+        std::string accountFile = "account_main.txt";
+        std::ofstream(accountFile, std::ios::trunc).close(); // reset file
+
+        Account acc("Alice", "IT12345", 1000.0);
+        acc.addTransaction(t1);
+        acc.addTransaction(t2);
+
+        // Scrivo l'account (con info + transazioni) su file
+        acc.writeAccountToFile(accountFile);
+
+        std::cout << "Account scritto su file '" << accountFile << "'." << std::endl;
+
+
     } catch (const std::exception& e) {
         std::cerr << "Errore: " << e.what() << std::endl;
     }
