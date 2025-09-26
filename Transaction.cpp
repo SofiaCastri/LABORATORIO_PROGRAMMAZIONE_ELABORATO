@@ -14,9 +14,7 @@ Transaction::Transaction(int id, double amt, TransactionType t, const std::strin
 {
     // Controllo importo
     if (amount <= 0) {
-        // Non ha senso creare una transazione con importo zero o negativo
-        // Lancia eccezione per segnalare errore al chiamante
-        throw std::invalid_argument("Amount must be positive.");
+        throw std::invalid_argument("Importo deve essere positivo"); // Non ha senso creare una transazione con importo zero o negativo
     }
 
     // Imposta la data corrente come stringa leggibile
