@@ -3,6 +3,7 @@
 //
 
 #include "Account.h"
+#include <iostream>
 
 Account::Account(const string &name, const string &iban, double balance) : name(name), iban(iban), balance(balance){}
 
@@ -80,4 +81,18 @@ double Account::getTotalOutgoing() const {
         }
     }
     return total;
+}
+
+
+void Account::writeTransactionsToFile(const std::string& filename) const {
+    if (transactions.empty()) {
+        std::cout << "Nessuna transazione da scrivere su file.\n";
+        return;
+    }
+
+    for (const auto& t : transactions) {
+        t.writeTransactionToFile(filename); // ogni transazione si salva da sola
+    }
+
+    std::cout << "Tutte le transazioni sono state salvate su file: " << filename << std::endl;
 }
