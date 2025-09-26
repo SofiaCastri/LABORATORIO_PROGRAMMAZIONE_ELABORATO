@@ -3,6 +3,7 @@
 //
 #include "gtest/gtest.h"
 #include "../Transaction.h"
+#include <fstream>
 
 
 //Verifica che il costruttore imposti correttamente tutti gli attributi passati.
@@ -52,4 +53,26 @@ TEST(TransactionTest, ToStringContainsAllFields) {
     EXPECT_NE(str.find("Incoming"), std::string::npos);
     EXPECT_NE(str.find("Salary"), std::string::npos);
     EXPECT_NE(str.find("-"), std::string::npos);// Verifica che la stringa contenga la data (presenza di "-" come separatore)
+}
+
+// Test che verifica la scrittura su file di una transazione
+TEST(TransactionTest, WriteTransactionToFile) {
+    Transaction t(1, 150.0, TransactionType::Incoming, "Test deposit");
+
+    std::string filename = "test_transaction.txt";
+    std::ofstream(filename, std::ios::trunc).close();// Pulisce eventuale file esistente
+
+    t.writeTransactionToFile(filename);
+
+    std::ifstream file(filename); // Legge il contenuto del file
+    ASSERT_TRUE(file.is_open());
+
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    // Controlla che il contenuto contenga alcune informazioni chiave
+    EXPECT_NE(content.find("ID: 1"), std::string::npos);
+    EXPECT_NE(content.find("Amount: 150"), std::string::npos);
+    EXPECT_NE(content.find("Type: Incoming"), std::string::npos);
+    EXPECT_NE(content.find("Description: Test deposit"), std::string::npos);
 }
