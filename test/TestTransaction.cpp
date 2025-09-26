@@ -82,3 +82,26 @@ TEST(TransactionTest, WriteTransactionToFile) {
 
     std::remove(filename.c_str()); // Rimuove il file dopo il test
 }
+
+TEST(TransactionTest, ReadTransactionFromFileValid) {
+    // Prepara il file di test
+    std::string filename = "test_read_transaction.txt";
+    std::ofstream(filename, std::ios::trunc).close();
+
+    // Crea e salva una transazione di riferimento
+    Transaction originalTransaction(123, 250.75, TransactionType::Incoming, "Stipendio");
+    originalTransaction.writeTransactionToFile(filename);
+
+    // Crea un oggetto Transaction temporaneo per chiamare il metodo con parametri validi
+    Transaction temp(0, 1.0, TransactionType::Incoming, "dummy");
+    Transaction readTransaction = temp.readTransactionFromFile(filename, 123);
+
+    // Verifica che tutti i campi corrispondano
+    EXPECT_EQ(readTransaction.getTransactionId(), originalTransaction.getTransactionId());
+    EXPECT_DOUBLE_EQ(readTransaction.getAmount(), originalTransaction.getAmount());
+    EXPECT_EQ(readTransaction.getType(), originalTransaction.getType());
+    EXPECT_EQ(readTransaction.getDescription(), originalTransaction.getDescription());
+    EXPECT_EQ(readTransaction.getDate(), originalTransaction.getDate());
+
+    std::remove(filename.c_str());
+}

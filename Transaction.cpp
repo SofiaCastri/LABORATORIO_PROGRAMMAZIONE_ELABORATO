@@ -73,7 +73,7 @@ void Transaction::setDate(const string& dt) {
     std::tm tm = {};
     std::istringstream ss(dt);
 
-    ss >> std::get_time(&tm, "%d-%m-%Y %H:%M:%S");
+    ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
 
     if (ss.fail()) {
     throw std::invalid_argument("Formato del date non valido");
