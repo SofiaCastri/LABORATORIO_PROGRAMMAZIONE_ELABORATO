@@ -56,3 +56,14 @@ void Transaction::setAmount(double amount) {
 void Transaction::setDescription(const std::string &description) {
     Transaction::description = description;
 }
+
+std::string Transaction::transactiontoString() const {
+    std::ostringstream oss;
+    oss << "Transaction:\n"
+        << "ID: " << transactionId << "\n"
+        << "Amount: " << amount << "\n"
+        << "Type: " << (type == TransactionType::Incoming ? "Incoming" : "Outgoing") << "\n"
+        << "Date: " << date << "\n"
+        << "Description: " << description << "\n";
+    return oss.str();
+}

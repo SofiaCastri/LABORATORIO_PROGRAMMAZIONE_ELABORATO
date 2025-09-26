@@ -28,6 +28,10 @@ public:
     void setAmount(double amount);
     void setDescription(const std::string& description) ;
 
+    //metodi per I/O
+    std::string transactiontoString() const; // Metodo per rappresentare una transazione come stringa leggibile
+
+
 private:
     int transactionId;
     double amount;
