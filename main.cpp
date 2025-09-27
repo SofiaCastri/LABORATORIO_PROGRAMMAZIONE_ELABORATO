@@ -93,14 +93,21 @@ int main() {
         // LETTURA DA FILE
         cout << "\n6. LETTURA TRANSAZIONE DA FILE" << endl;
 
-        // Leggo una transazione specifica dal file
         try {
-            Transaction lettore(0, 1.0, TransactionType::Incoming, "temporanea");
-            Transaction transazioneLettura = lettore.readTransactionFromFile(fileTransazioni, 1001);
-            cout << "Transazione letta dal file:" << endl;
-            cout << transazioneLettura.transactiontoString() << endl;
+            cout << "Caricamento delle transazioni dal file '" << fileTransazioni << "'..." << endl;
+
+            // Carica tutte le transazioni dal file nel conto di Mario
+            contoMario.loadTransactionsFromFile(fileTransazioni);
+
+            cout << "Transazioni caricate con successo nel conto di Mario Rossi." << endl;
+            cout << "Numero totale transazioni: " << contoMario.getTransactionSize() << endl;
+
+            // Stampa le transazioni per verificarne il caricamento
+            cout << "\nTransazioni attualmente registrate nel conto di Mario:" << endl;
+            cout << contoMario.accountToString() << endl;
+
         } catch (const exception& e) {
-            cerr << "Errore nella lettura: " << e.what() << endl;
+            cerr << "Errore durante il caricamento delle transazioni: " << e.what() << endl;
         }
 
         cout << "----------------------------------------" << endl;

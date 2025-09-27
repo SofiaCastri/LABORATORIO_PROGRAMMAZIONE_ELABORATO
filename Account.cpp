@@ -144,12 +144,14 @@ void Account::writeAccountToFile(const std::string& filename) const {
 }
 
 void Account::loadTransactionsFromFile(const std::string& filename) {
+    //apertura file di testo. se l'apertura dovessi fallire lancia un eccezione
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Impossibile aprire il file " + filename);
     }
 
     std::string line;
+    //creo variabili temporanei per i parametri della transazione
     int id = 0;
     double amount = 0.0;
     TransactionType type = TransactionType::Outgoing;
@@ -169,7 +171,7 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
 
         if (readingTransaction) {
             if (line.find("ID: ") != std::string::npos) {
-                id = std::stoi(line.substr(4));
+                id = std::stoi(line.substr(4)); //estrapolo ID
 
                 // controlla duplicati
                 bool exists = false;
