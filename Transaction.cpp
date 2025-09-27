@@ -113,13 +113,15 @@ void Transaction::writeTransactionToFile(const std::string& filename) const {
 
 
 Transaction Transaction::readTransactionFromFile(const std::string& filename, int targetId) {
+
+    //Prova ad aprire il file in lettura. Se fallisce, lancia un'eccezione
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Impossibile aprire il file " + filename);
     }
 
     std::string line;
-    // Variabili temporanee per memorizzare i dati
+    // Crea variabili temporanee per memorizzare i dati della transazione
     int id = 0;
     double amt = 0.0;
     TransactionType tp = TransactionType::Outgoing;
@@ -129,9 +131,9 @@ Transaction Transaction::readTransactionFromFile(const std::string& filename, in
     bool found = false;
     bool readingTransaction = false;
 
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) { //Legge il file una riga alla volta fino alla fine.
         if (line.find("Transaction:") != std::string::npos) {
-            readingTransaction = true;
+            readingTransaction = true; //trovato inizio di una transazione
             continue;
         }
 

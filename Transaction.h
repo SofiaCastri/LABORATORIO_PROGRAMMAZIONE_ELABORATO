@@ -35,7 +35,7 @@ public:
     //metodi per I/O
     std::string transactiontoString() const; // Metodo per rappresentare una transazione come stringa leggibile
     void writeTransactionToFile(const std::string& filename) const; //metodo scrittura di una transazione su file di testo
-    Transaction readTransactionFromFile(const std::string& filename, int transactionId);
+    Transaction readTransactionFromFile(const std::string& filename, int transactionId); //cerca una transazione nel file di testo
 
 
 private:

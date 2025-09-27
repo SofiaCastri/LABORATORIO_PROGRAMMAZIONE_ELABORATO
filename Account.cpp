@@ -145,6 +145,7 @@ void Account::writeAccountToFile(const std::string& filename) const {
 
 
 void Account::loadTransactionsFromFile(const std::string& filename) {
+    //Apre il file in lettura. Se fallisce, lancia eccezione
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Impossibile aprire il file " + filename);
@@ -162,9 +163,9 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
         }
 
         if (readingTransaction && line.find("ID: ") != std::string::npos) {
-            currentId = std::stoi(line.substr(4));
+            currentId = std::stoi(line.substr(4)); //estraee l'ID
 
-            // Controlla se esiste già
+            // Controlla se la transazione è già presente nel vettore delle transazioni
             bool exists = false;
             for (const auto& t : transactions) {
                 if (t.getTransactionId() == currentId) {
