@@ -254,6 +254,7 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
     EXPECT_NE(content.find("Nessuna transazione registrata"), std::string::npos);
 }
 
+//caso transazioni duplicata
 TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
     std::string filename = "test_duplicates.txt";
     std::ofstream(filename, std::ios::trunc).close();
@@ -277,4 +278,33 @@ TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
     EXPECT_DOUBLE_EQ(account.getBalance(), 575.0); // Saldo invariato
 
     std::remove(filename.c_str());
+}
+
+// 2. File vuoto → nessuna transazione caricata, saldo invariato
+TEST(AccountLoadTest, EmptyFile) {
+    std::string fname = "test_empty.txt";
+    std::ofstream(fname, std::ios::trunc).close();  // crea/azzerra
+    Account acc("Test", "IT000", 500.0);
+
+    acc.loadTransactionsFromFile(fname);
+
+    EXPECT_EQ(acc.getTransactionSize(), 0);
+    EXPECT_DOUBLE_EQ(acc.getBalance(), 500.0);
+
+    std::remove(fname.c_str());
+}
+
+TEST(AccountLoadTest, OutgoingExceedingBalance) {
+    std::string fname = "test_overout.txt";
+
+    // Creo una transazione outgoing che supera il saldo iniziale
+    Transaction t1(501, 200.0, TransactionType::Outgoing, "Big outgoing");
+    t1.writeTransactionToFile(fname);
+
+    // Creo un nuovo account con saldo troppo basso per coprire la transazione
+    Account acc("Test", "IT000", 100.0);
+
+    // Mi aspetto che durante il caricamento venga lanciata un'eccezione per saldo insufficiente
+    EXPECT_THROW(acc.loadTransactionsFromFile(fname), std::runtime_error);
+    std::remove(fname.c_str());
 }
