@@ -143,52 +143,71 @@ void Account::writeAccountToFile(const std::string& filename) const {
     file.close();
 }
 
-
 void Account::loadTransactionsFromFile(const std::string& filename) {
-    //Apre il file in lettura. Se fallisce, lancia eccezione
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Impossibile aprire il file " + filename);
     }
 
     std::string line;
-    int currentId = 0;
+    int id = 0;
+    double amount = 0.0;
+    TransactionType type = TransactionType::Outgoing;
+    std::string date, description;
+
     bool readingTransaction = false;
 
     while (std::getline(file, line)) {
         if (line.find("Transaction:") != std::string::npos) {
             readingTransaction = true;
-            currentId = 0;
+            id = 0;
+            amount = 0.0;
+            date.clear();
+            description.clear();
             continue;
         }
 
-        if (readingTransaction && line.find("ID: ") != std::string::npos) {
-            currentId = std::stoi(line.substr(4)); //estraee l'ID
+        if (readingTransaction) {
+            if (line.find("ID: ") != std::string::npos) {
+                id = std::stoi(line.substr(4));
 
-            // Controlla se la transazione è già presente nel vettore delle transazioni
-            bool exists = false;
-            for (const auto& t : transactions) {
-                if (t.getTransactionId() == currentId) {
-                    exists = true;
-                    break;
+                // controlla duplicati
+                bool exists = false;
+                for (const auto& t : transactions) {
+                    if (t.getTransactionId() == id) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (exists) {
+                    readingTransaction = false; // skip
+                    continue;
                 }
             }
-
-            // Se non esiste, leggila SUBITO
-            if (!exists && currentId != 0) {
-                try {
-                    Transaction reader(0, 1.0, TransactionType::Incoming, "temp");
-                    Transaction newTrans = reader.readTransactionFromFile(filename, currentId);
-                    addTransaction(newTrans);
-                    std::cout << "Aggiunta transazione ID: " << currentId << std::endl;
-                } catch (const std::exception& e) {
-                    std::cerr << "Errore transazione " << currentId << ": " << e.what() << std::endl;
-                }
+            else if (line.find("Amount: ") != std::string::npos) {
+                amount = std::stod(line.substr(8));
             }
-        }
-
-        if (line.find("----------------------") != std::string::npos) {
-            readingTransaction = false;
+            else if (line.find("Type: ") != std::string::npos) {
+                std::string typeStr = line.substr(6);
+                type = (typeStr == "Incoming" ? TransactionType::Incoming : TransactionType::Outgoing);
+            }
+            else if (line.find("Date: ") != std::string::npos) {
+                date = line.substr(6);
+            }
+            else if (line.find("Description: ") != std::string::npos) {
+                description = line.substr(13);
+            }
+            else if (line.find("----------------------") != std::string::npos) {
+                // fine di una transazione completa
+                if (id != 0 && amount > 0.0) {
+                    Transaction t(id, amount, type, description);
+                    t.setDate(date);
+                    addTransaction(t);
+                    std::cout << "Aggiunta transazione ID: " << id << std::endl;
+                }
+                readingTransaction = false;
+            }
         }
     }
 
