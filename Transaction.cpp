@@ -83,11 +83,10 @@ void Transaction::setDate(const string& dt) {
     }
 
     tm.tm_isdst = -1;  // Lascia che il sistema decida se è ora legale
-    if (mktime(&tm) == -1) {
+    if (mktime(&tm) == -1) { //Se mktime restituisce -1, significa che i valori della data/ora non sono validi
     throw std::invalid_argument("Valori del date non validi");
     }
 
-    // setter
     Transaction::date = dt;
 }
 
