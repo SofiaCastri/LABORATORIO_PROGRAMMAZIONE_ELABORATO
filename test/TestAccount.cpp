@@ -15,6 +15,13 @@ TEST(AccountTest, ConstructorAndGetters) {
     EXPECT_DOUBLE_EQ(acc.getBalance(), 1000.0);
 }
 
+TEST(AccountConstructorTest, NegativeInitialBalanceThrows) {
+    // Prova a creare un account con saldo negativo
+    EXPECT_THROW({
+                     Account acc("Mario Rossi", "IT1234567890", -100.0);
+                 }, std::invalid_argument);
+}
+
 // Test addTransaction con Incoming
 TEST(AccountTest, AddTransactionIncoming) {
     Account acc("Bob", "IT456", 500.0);
