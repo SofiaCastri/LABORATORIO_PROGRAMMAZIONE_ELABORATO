@@ -29,7 +29,7 @@ public: Account(const std::string& name, const std::string& iban, double balance
     double getTotalIncoming() const; // Calcola il totale di tutte le transazioni in entrata
     double getTotalOutgoing() const; // Calcola il totale di tutte le transazioni in uscita
 
-    //metodi per scrivere su file
+    //metodi per scrivere  e leggere da file
     void writeTransactionsToFile(const std::string& filename) const;
     std::string accountToString() const;
     void writeAccountToFile(const std::string& filename) const;
