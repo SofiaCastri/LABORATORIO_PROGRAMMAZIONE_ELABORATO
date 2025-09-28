@@ -150,7 +150,7 @@ std::string Account::accountToString() const {
             std::istringstream transStream(t.transactiontoString());
             std::string line;
             while (std::getline(transStream, line)) {
-                oss << "  " << line << "\n";  // indentazione
+                oss << "  " << line << "\n";  // spazi di indentazione per rendere il contenuto più leggibile
             }
             oss << "--------------------\n";
         }
@@ -171,14 +171,14 @@ void Account::writeAccountToFile(const std::string& filename) const {
 }
 
 void Account::loadTransactionsFromFile(const std::string& filename) {
-    //apertura file di testo. se l'apertura dovessi fallire lancia un eccezione
+    //apertura file di testo. se l'apertura dovesse fallire lancia un eccezione
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Impossibile aprire il file " + filename);
     }
 
     std::string line;
-    //creo variabili temporanei per i parametri della transazione
+    //creo variabili temporanee per i parametri della transazione
     int id = 0;
     double amount = 0.0;
     TransactionType type = TransactionType::Outgoing;
@@ -188,7 +188,7 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
 
     while (std::getline(file, line)) {
         if (line.find("Transaction:") != std::string::npos) {
-            readingTransaction = true;
+            readingTransaction = true; //trovata transazione
             id = 0;
             amount = 0.0;
             date.clear();
