@@ -4,7 +4,6 @@
 
 #include "gtest/gtest.h"
 #include "../Account.h"
-#include "../Transaction.h"
 #include <fstream>
 
 // Test costruttore e getter
@@ -92,6 +91,35 @@ TEST(AccountTest, TransferWithInsufficientBalanceThrows) {
 
     EXPECT_THROW(alice.transferTo(-100.0, bob, "Invalid"), std::invalid_argument);
 }
+
+TEST(AccountDateSearchTest, FindsTransactionsBeforeGivenDate) {
+    Account acc("Mario Rossi", "IT1234567890", 1000.0);
+
+    //Aggiungo alcune transazioni con date specifiche
+    Transaction t1(1, 100.0, TransactionType::Incoming, "Stipendio");
+    t1.setDate("2025-09-25 10:00:00");
+    acc.addTransaction(t1);
+
+    Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa");
+    t2.setDate("2025-09-26 12:00:00");
+    acc.addTransaction(t2);
+
+    Transaction t3(3, 200.0, TransactionType::Incoming, "Bonus");
+    t3.setDate("2025-09-27 15:00:00");
+    acc.addTransaction(t3);
+
+    std::vector<Transaction> results = acc.findTransactionsBeforeDate("2025-09-26 00:00:00");
+
+    ASSERT_EQ(results.size(), 1);                  // Deve restituire solo t1
+    EXPECT_EQ(results[0].getTransactionId(), 1);
+    EXPECT_EQ(results[0].getDescription(), "Stipendio");
+}
+
+TEST(AccountDateSearchTest, InvalidDateThrowsException) {
+    Account acc("Mario Rossi", "IT1234567890", 1000.0);
+    EXPECT_THROW(acc.findTransactionsBeforeDate("2025-99-99 00:00:00"), std::invalid_argument);
+}
+
 
 //test totale entrate
 TEST(AccountTest, TotalIncoming) {
