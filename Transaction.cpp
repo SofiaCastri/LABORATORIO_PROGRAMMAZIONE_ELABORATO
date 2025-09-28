@@ -52,7 +52,10 @@ std::string Transaction::getDescription() const {
 
 //setter
 void Transaction::setAmount(double amt) {
-    Transaction::amount = amt;
+    if (amt <= 0) {
+        throw std::invalid_argument("L'importo della transazione deve essere maggiore di zero");
+    }
+    amount = amt;
 }
 
 void Transaction::setDescription(const std::string &descpt) {
