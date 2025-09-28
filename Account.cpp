@@ -99,27 +99,23 @@ std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& 
     return results;
 }
 
-
 double Account::getTotalIncoming() const {
     double total = 0.0;
-    for (const auto& t : transactions) {
-        if (t.getType() == TransactionType::Incoming) {
-            total += t.getAmount(); // somma solo le entrate
-        }
+    auto incomingTransactions = searchTransactionByType(TransactionType::Incoming);
+    for (const auto& t : incomingTransactions) {
+        total += t.getAmount();
     }
     return total;
 }
 
 double Account::getTotalOutgoing() const {
     double total = 0.0;
-    for (const auto& t : transactions) {
-        if (t.getType() == TransactionType::Outgoing) {
-            total += t.getAmount(); // somma solo le uscite
-        }
+    auto outgoingTransactions = searchTransactionByType(TransactionType::Outgoing);
+    for (const auto& t : outgoingTransactions) {
+        total += t.getAmount();
     }
     return total;
 }
-
 
 void Account::writeTransactionsToFile(const std::string& filename) const {
     if (transactions.empty()) {
