@@ -69,6 +69,37 @@ vector<Transaction> Account::searchTransactionByType(TransactionType type) const
     return filteredTransactions;
 }
 
+std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& targetDate) const {
+    //Controllo che il formato della data sia corretto (es. "2025-09-26 00:00:00")
+    std::tm target_tm = {};
+    std::istringstream ss(targetDate);
+    ss >> std::get_time(&target_tm, "%Y-%m-%d %H:%M:%S");
+
+    if (ss.fail() || mktime(&target_tm) == -1) {
+        throw std::invalid_argument("Formato della data non valido. Usa il formato: YYYY-MM-DD HH:MM:SS");
+    }
+
+    time_t target_time = mktime(&target_tm); // converte stringa data in un numero per poterlo confrontare
+
+    std::vector<Transaction> results;
+
+    for (const auto& t : transactions) {
+        std::tm trans_tm = {};
+        std::istringstream ts(t.getDate());
+        ts >> std::get_time(&trans_tm, "%Y-%m-%d %H:%M:%S");
+
+        time_t trans_time = mktime(&trans_tm); // converte stringa data in un numero per poterlo confrontare
+
+        if (trans_time < target_time) {
+            results.push_back(t);
+        }
+
+    }
+
+    return results;
+}
+
+
 double Account::getTotalIncoming() const {
     double total = 0.0;
     for (const auto& t : transactions) {

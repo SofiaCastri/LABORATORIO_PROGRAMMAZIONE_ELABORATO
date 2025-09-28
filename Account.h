@@ -25,6 +25,7 @@ public: Account(const std::string& name, const std::string& iban, double balance
     void addTransaction(const Transaction& t); // aggiunge una transazione
     void transferTo(double amount, Account& receiver, const std::string& description); // trasferisce fondi a un altro conto
     std::vector<Transaction> searchTransactionByType(TransactionType type) const;
+    std::vector<Transaction> findTransactionsBeforeDate(const std::string& targetDate) const;
     double getTotalIncoming() const; // Calcola il totale di tutte le transazioni in entrata
     double getTotalOutgoing() const; // Calcola il totale di tutte le transazioni in uscita
 
