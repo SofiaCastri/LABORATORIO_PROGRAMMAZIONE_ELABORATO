@@ -7,7 +7,11 @@
 #include <sstream>
 #include <fstream>
 
-Account::Account(const string &name, const string &iban, double balance) : name(name), iban(iban), balance(balance){}
+Account::Account(const string &name, const string &iban, double balance) : name(name), iban(iban), balance(balance){
+    if (balance < 0.0) {
+        throw std::invalid_argument("Il saldo iniziale non può essere negativo.");
+    }
+}
 
 // Getter
 std::string Account::getName() const {
