@@ -67,7 +67,7 @@ vector<Transaction> Account::searchTransactionByType(TransactionType type) const
     vector<Transaction> filteredTransactions;
     for (const auto& transaction : transactions) {
         if (transaction.getType() == type) {
-            filteredTransactions.push_back(transaction);;
+            filteredTransactions.push_back(transaction);
         }
     }
     return filteredTransactions;
