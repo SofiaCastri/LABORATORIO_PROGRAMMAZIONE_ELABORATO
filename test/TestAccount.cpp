@@ -223,20 +223,19 @@ TEST(AccountTest, WriteTransactionsToFile) {
     EXPECT_NE(content.find("Outgoing"), std::string::npos);
 }
 
-
+// Test che verifica il comportamento quando il vettore di transazioni è vuoto
 TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
     Account acc("Empty User", "IT00000", 500.0);
 
     std::string filename = "file_transazioni_account_vuoto.txt";
-    std::ofstream(filename, std::ios::trunc).close();
-
     acc.writeTransactionsToFile(filename);
 
     ASSERT_TRUE(std::filesystem::exists(filename));
+
     std::ifstream file(filename);
     ASSERT_TRUE(file.is_open());
-
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
     file.close();
 
     // Controllo che il file sia vuoto

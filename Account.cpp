@@ -130,12 +130,7 @@ double Account::getTotalOutgoing() const {
 }
 
 void Account::writeTransactionsToFile(const std::string& filename) const {
-    if (transactions.empty()) {
-        std::cout << "Nessuna transazione da scrivere su file.\n";
-        return;
-    }
-
-    std::ofstream file(filename, std::ios::app);
+    std::ofstream file(filename, std::ios::app); // apre
     if (!file.is_open()) {
         std::cerr << "Impossibile aprire il file: " << filename << std::endl;
         return;
