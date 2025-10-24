@@ -91,13 +91,23 @@ TEST(AccountTest, TransferNegativeAmountThrows) {
     EXPECT_THROW(alice.transferTo(-100.0, bob, "Invalid"), std::invalid_argument);
 }
 
-// Test transferTo con importo negativo → eccezione
-TEST(AccountTest, TransferWithInsufficientBalanceThrows) {
-    Account alice("Alice", "IT111", 1000.0);
+// Test transferTo con saldo insufficiente → eccezione
+TEST(AccountTest, TransferInsufficientBalanceThrows) {
+    Account alice("Alice", "IT111", 100.0);
     Account bob("Bob", "IT222", 500.0);
 
-    EXPECT_THROW(alice.transferTo(-100.0, bob, "Invalid"), std::invalid_argument);
+    EXPECT_THROW(alice.transferTo(200.0, bob, "Big Payment"), std::runtime_error);
+
+    // Verifica che i saldi restino invariati
+    EXPECT_DOUBLE_EQ(alice.getBalance(), 100.0);
+    EXPECT_DOUBLE_EQ(bob.getBalance(), 500.0);
+
+    // Nessuna transazione dovrebbe essere registrata
+    EXPECT_TRUE(alice.searchTransactionByType(TransactionType::Outgoing).empty());
+    EXPECT_TRUE(bob.searchTransactionByType(TransactionType::Incoming).empty());
 }
+
+
 
 TEST(AccountDateSearchTest, FindsTransactionsBeforeGivenDate) {
     Account acc("Mario Rossi", "IT1234567890", 1000.0);
