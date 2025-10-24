@@ -130,18 +130,22 @@ double Account::getTotalOutgoing() const {
 }
 
 void Account::writeTransactionsToFile(const std::string& filename) const {
-    std::ofstream file(filename, std::ios::app); // apre
+    std::ofstream file(filename, std::ios::app); // apre il file in modalità append
     if (!file.is_open()) {
         std::cerr << "Impossibile aprire il file: " << filename << std::endl;
         return;
     }
 
-    for (const auto& t : transactions) {
-        file << t.transactiontoString() << "\n----------------------\n";
+    if (transactions.empty()) {
+        std::cout << "Nessuna transazione da scrivere su file.\n";
+    } else {
+        for (const auto& t : transactions) {
+            file << t.transactiontoString() << "\n----------------------\n";
+        }
+        std::cout << "Tutte le transazioni sono state salvate su file: " << filename << std::endl;
     }
 
     file.close();
-    std::cout << "Tutte le transazioni sono state salvate su file: " << filename << std::endl;
 }
 
 
