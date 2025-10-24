@@ -18,10 +18,12 @@ public: Account(const std::string& name, const std::string& iban, double balance
     std::string getName() const;
     std::string getIban() const;
     double getBalance() const;
-    int getTransactionSize() const;
+    const std::vector<Transaction>& getTransactions() const;
+
 
 
     //metodi principali
+    int getTransactionSize() const;
     void addTransaction(const Transaction& t); // aggiunge una transazione
     void transferTo(double amount, Account& receiver, const std::string& description); // trasferisce fondi a un altro conto
     std::vector<Transaction> searchTransactionByType(TransactionType type) const;
