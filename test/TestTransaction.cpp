@@ -69,11 +69,10 @@ TEST(TransactionTest, UpdateTransaction) {
     EXPECT_EQ(t.getDescription(), "Updated Payment");
     EXPECT_EQ(t.getDate(), "2025-10-24 15:00:00");
 
-
+    //resto invariato
     EXPECT_EQ(t.getTransactionId(), 10);
     EXPECT_EQ(t.getType(), TransactionType::Outgoing);
 }
-
 
 
 
