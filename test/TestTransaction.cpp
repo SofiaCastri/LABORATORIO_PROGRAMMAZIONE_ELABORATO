@@ -53,7 +53,7 @@ TEST(TransactionTest, SetDateInvalidFormatThrows) {
     Transaction t(6, 150.0, TransactionType::Incoming, "Test");
     EXPECT_THROW(t.setDate("24-10-2025 14:30"), std::invalid_argument);
 }
-
+//controllo setDate: data 30 febbraio
 TEST(TransactionTest, SetDateInvalidValueThrows) {
     Transaction t(7, 150.0, TransactionType::Incoming, "Test");
     EXPECT_THROW(t.setDate("2025-02-30 10:00:00"), std::invalid_argument);
