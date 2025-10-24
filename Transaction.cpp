@@ -99,6 +99,14 @@ void Transaction::setDate(const string& dt) {
 }
 
 
+void Transaction::update(double newAmount, const std::string& newDescription, const std::string& newDate) {
+    setAmount(newAmount);
+    setDescription(newDescription);
+    setDate(newDate);
+}
+
+
+
 std::string Transaction::transactiontoString() const {
     std::ostringstream oss;
     oss << "Transaction:\n"
@@ -111,7 +119,8 @@ std::string Transaction::transactiontoString() const {
 }
 
 void Transaction::writeTransactionToFile(const std::string& filename) const {
-    std::ofstream file(filename, std::ios::app); // apertura in modalità append (aggiunge i dati alla fine del file senza cancellare il contenuto precedente)
+    std::ofstream file(filename, std::ios::app);
+    // apertura in modalità append (aggiunge i dati alla fine del file senza cancellare il contenuto precedente)
     if (file.is_open()) {
         file << transactiontoString() << "\n----------------------\n";
         file.close(); // chiude il file per salvare correttamente i dati

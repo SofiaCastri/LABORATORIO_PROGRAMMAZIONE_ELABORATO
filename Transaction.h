@@ -32,6 +32,10 @@ public:
     void setDate(const string& dt);
 
 
+    // Aggiornamento completo della transazione
+    void update(double newAmount, const std::string& newDescription, const std::string& newDate);
+
+
     //metodi per I/O
     std::string transactiontoString() const; // Metodo per rappresentare una transazione come stringa leggibile
     void writeTransactionToFile(const std::string& filename) const; //metodo scrittura di una transazione su file di testo
