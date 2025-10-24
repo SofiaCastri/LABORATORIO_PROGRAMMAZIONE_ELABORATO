@@ -27,10 +27,6 @@ double Account::getBalance() const {
 }
 
 
-const std::vector<Transaction>& Account::getTransactions() const {
-    return transactions;
-}
-
 
 int Account::getTransactionSize() const {
     return static_cast<int>(transactions.size());
