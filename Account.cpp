@@ -159,9 +159,9 @@ std::string Account::accountToString() const {
     oss << "Balance: " << balance << "\n";
 
     if (!transactions.empty()) {
-        oss << "Transactions:\n";
+        oss << "Transactions:\n\n";
         for (const auto& t : transactions) {
-            oss << t.transactiontoString() << "\n";
+            oss << t.transactiontoString() << "\n----------------------\n";
         }
     } else {
         oss << "Nessuna transazione registrata.\n";
