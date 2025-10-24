@@ -72,19 +72,27 @@ vector<Transaction> Account::searchTransactionByType(TransactionType type) const
     }
     return filteredTransactions;
 }
-
 std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& targetDate) const {
-    //Controllo che il formato della data sia corretto (es. "2025-09-26 00:00:00")
+    // Controlla e valida la data passata come parametro
     std::tm target_tm = {};
     std::istringstream ss(targetDate);
     ss >> std::get_time(&target_tm, "%Y-%m-%d %H:%M:%S");
 
-    if (ss.fail() || mktime(&target_tm) == -1) {
+    if (ss.fail()) {
         throw std::invalid_argument("Formato della data non valido. Usa il formato: YYYY-MM-DD HH:MM:SS");
     }
 
-    time_t target_time = mktime(&target_tm); // converte stringa data in un numero per poterlo confrontare
+    std::tm original = target_tm;
+    target_tm.tm_isdst = -1;
 
+    if (mktime(&target_tm) == -1 ||
+        target_tm.tm_mday != original.tm_mday ||
+        target_tm.tm_mon  != original.tm_mon  ||
+        target_tm.tm_year != original.tm_year) {
+        throw std::invalid_argument("La data inserita non è valida (es. 30 febbraio)");
+    }
+
+    time_t target_time = mktime(&target_tm);
     std::vector<Transaction> results;
 
     for (const auto& t : transactions) {
@@ -92,12 +100,10 @@ std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& 
         std::istringstream ts(t.getDate());
         ts >> std::get_time(&trans_tm, "%Y-%m-%d %H:%M:%S");
 
-        time_t trans_time = mktime(&trans_tm); // converte stringa data in un numero per poterlo confrontare
-
+        time_t trans_time = mktime(&trans_tm);
         if (trans_time < target_time) {
             results.push_back(t);
         }
-
     }
 
     return results;
