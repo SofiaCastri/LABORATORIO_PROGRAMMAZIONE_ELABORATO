@@ -135,52 +135,49 @@ void Account::writeTransactionsToFile(const std::string& filename) const {
         return;
     }
 
-    for (const auto& t : transactions) {
-        t.writeTransactionToFile(filename); // ogni transazione si salva da sola
+    std::ofstream file(filename, std::ios::app);
+    if (!file.is_open()) {
+        std::cerr << "Impossibile aprire il file: " << filename << std::endl;
+        return;
     }
 
+    for (const auto& t : transactions) {
+        file << t.transactiontoString() << "\n----------------------\n";
+    }
+
+    file.close();
     std::cout << "Tutte le transazioni sono state salvate su file: " << filename << std::endl;
 }
 
 
+
 std::string Account::accountToString() const {
     std::ostringstream oss;
-    oss << "====================\n";
     oss << "Account Info\n";
-    oss << "====================\n";
     oss << "Name: " << name << "\n";
     oss << "IBAN: " << iban << "\n";
-    oss << "Balance: " << balance << "\n\n";
+    oss << "Balance: " << balance << "\n";
 
-    if (transactions.empty()) {
-        oss << "Nessuna transazione registrata.\n";
-    } else {
+    if (!transactions.empty()) {
         oss << "Transactions:\n";
-        oss << "--------------------\n";
         for (const auto& t : transactions) {
-            // indentiamo ogni transazione
-            std::istringstream transStream(t.transactiontoString());
-            std::string line;
-            while (std::getline(transStream, line)) {
-                oss << "  " << line << "\n";  // spazi di indentazione per rendere il contenuto più leggibile
-            }
-            oss << "--------------------\n";
+            oss << t.transactiontoString() << "\n";
         }
+    } else {
+        oss << "Nessuna transazione registrata.\n";
     }
 
     return oss.str();
 }
 
 void Account::writeAccountToFile(const std::string& filename) const {
-    std::ofstream file(filename, std::ios::app); // apertura in modalità append
-    if (!file.is_open()) {
-        throw std::runtime_error("Impossibile aprire il file " + filename);
-    }
+    std::ofstream file(filename, std::ios::app);
+    if (!file.is_open()) throw std::runtime_error("Impossibile aprire il file " + filename);
 
-    // Usa accountToString() per convertire in stringa e scrivere su file
-    file << accountToString() << "\n=====================\n";
+    file << accountToString() << "\n\n";
     file.close();
 }
+
 
 void Account::loadTransactionsFromFile(const std::string& filename) {
     //apertura file di testo. se l'apertura dovesse fallire lancia un eccezione
