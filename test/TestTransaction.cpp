@@ -42,6 +42,27 @@ TEST(TransactionTest, SettersAndGetters) {
     EXPECT_EQ(t.getDescription(), "Updated Payment");
 }
 
+//controllo setDate
+TEST(TransactionTest, SetDateValid) {
+    Transaction t(5, 150.0, TransactionType::Incoming, "Test");
+    EXPECT_NO_THROW(t.setDate("2025-10-24 14:30:00"));
+    EXPECT_EQ(t.getDate(), "2025-10-24 14:30:00");
+}
+//controllo setDate: formattazione sbagliata
+TEST(TransactionTest, SetDateInvalidFormatThrows) {
+    Transaction t(6, 150.0, TransactionType::Incoming, "Test");
+    EXPECT_THROW(t.setDate("24-10-2025 14:30"), std::invalid_argument);
+}
+
+TEST(TransactionTest, SetDateInvalidValueThrows) {
+    Transaction t(7, 150.0, TransactionType::Incoming, "Test");
+    EXPECT_THROW(t.setDate("2025-02-30 10:00:00"), std::invalid_argument);
+}
+
+
+
+
+
 
 TEST(TransactionTest, ToStringContainsAllFields) {
     Transaction t(123, 250.50, TransactionType::Incoming, "Salary");
