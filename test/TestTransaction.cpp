@@ -59,7 +59,20 @@ TEST(TransactionTest, SetDateInvalidValueThrows) {
     EXPECT_THROW(t.setDate("2025-02-30 10:00:00"), std::invalid_argument);
 }
 
+//test per update
+TEST(TransactionTest, UpdateTransaction) {
+    Transaction t(10, 100.0, TransactionType::Outgoing, "Initial Payment");
 
+    t.update(200.0, "Updated Payment", "2025-10-24 15:00:00");
+
+    EXPECT_DOUBLE_EQ(t.getAmount(), 200.0);
+    EXPECT_EQ(t.getDescription(), "Updated Payment");
+    EXPECT_EQ(t.getDate(), "2025-10-24 15:00:00");
+
+
+    EXPECT_EQ(t.getTransactionId(), 10);
+    EXPECT_EQ(t.getType(), TransactionType::Outgoing);
+}
 
 
 
