@@ -159,6 +159,19 @@ TEST(AccountDateSearchTest, InvalidDateThrowsException) {
     EXPECT_THROW(acc.findTransactionsBeforeDate("2025-99-99 00:00:00"), std::invalid_argument);
 }
 
+// Nessuna transazione prima di settembre
+TEST(AccountDateSearchTest, NoTransactionsBeforeDate) {
+    Account acc("Luca", "IT555", 1000.0);
+
+    Transaction t1(1, 100.0, TransactionType::Incoming, "Bonus");
+    t1.setDate("2025-10-10 10:00:00");
+    acc.addTransaction(t1);
+
+    auto results = acc.findTransactionsBeforeDate("2025-09-01 00:00:00");
+
+    EXPECT_TRUE(results.empty());
+}
+
 
 //test totale entrate
 TEST(AccountTest, TotalIncoming) {
