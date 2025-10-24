@@ -21,7 +21,7 @@ TEST(TransactionTest, ConstructorNegativeAmountThrows) {
     EXPECT_THROW(Transaction t1(2, -50.0, TransactionType::Outgoing, "Withdraw"), std::invalid_argument);
 }
 
-//verifica che il costruttore lanci un'eccezione se l'importo è negativo
+//verifica che il costruttore lanci un'eccezione se l'importo è ZERO
 TEST(TransactionTest, ConstructorZeroAmountThrows) {
     EXPECT_THROW(Transaction t2(3, 0.0, TransactionType::Incoming, "Zero"), std::invalid_argument);
 }
