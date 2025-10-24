@@ -107,6 +107,28 @@ TEST(AccountTest, TransferInsufficientBalanceThrows) {
     EXPECT_TRUE(bob.searchTransactionByType(TransactionType::Incoming).empty());
 }
 
+TEST(AccountTest, SearchTransactionByType) {
+    Account acc("TestUser", "IT123", 1000.0);
+
+    Transaction t1(1, 100.0, TransactionType::Incoming, "Salary");
+    Transaction t2(2, 50.0, TransactionType::Outgoing, "Groceries");
+    Transaction t3(3, 200.0, TransactionType::Incoming, "Bonus");
+
+    acc.addTransaction(t1);
+    acc.addTransaction(t2);
+    acc.addTransaction(t3);
+
+    // Verifica Incoming
+    auto incoming = acc.searchTransactionByType(TransactionType::Incoming);
+    ASSERT_EQ(incoming.size(), 2);
+    EXPECT_EQ(incoming[0].getDescription(), "Salary");
+    EXPECT_EQ(incoming[1].getDescription(), "Bonus");
+
+    // Verifica Outgoing
+    auto outgoing = acc.searchTransactionByType(TransactionType::Outgoing);
+    ASSERT_EQ(outgoing.size(), 1);
+    EXPECT_EQ(outgoing[0].getDescription(), "Groceries");
+}
 
 
 TEST(AccountDateSearchTest, FindsTransactionsBeforeGivenDate) {
