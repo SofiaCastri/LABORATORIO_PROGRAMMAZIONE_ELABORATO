@@ -16,7 +16,7 @@ Transaction::Transaction(int id, double amt, TransactionType t, const std::strin
 {
     // Controllo importo
     if (amount <= 0) {
-        throw std::invalid_argument("Importo deve essere positivo"); // Non ha senso creare una transazione con importo zero o negativo
+        throw std::invalid_argument("Importo deve essere positivo");
     }
 
     // Imposta la data corrente come stringa leggibile
@@ -53,7 +53,7 @@ std::string Transaction::getDescription() const {
 //setter
 void Transaction::setAmount(double amt) {
     if (amt <= 0) {
-        throw std::invalid_argument("L'importo della transazione deve essere maggiore di zero");
+        throw std::invalid_argument("L'importo della transazione deve essere positivo");
     }
     amount = amt;
 }
@@ -84,7 +84,7 @@ void Transaction::setDate(const string& dt) {
     std::tm original = tm;
 
     tm.tm_isdst = -1;  // Lascia che il sistema decida se è ora legale
-    if (mktime(&tm) == -1) { //Se mktime restituisce -1, significa che i valori della data/ora non sono validi
+    if (mktime(&tm) == -1) {
     throw std::invalid_argument("Valori del date non validi");
     }
 
@@ -118,12 +118,13 @@ std::string Transaction::transactiontoString() const {
     return oss.str();
 }
 
+
 void Transaction::writeTransactionToFile(const std::string& filename) const {
     std::ofstream file(filename, std::ios::app);
     // apertura in modalità append (aggiunge i dati alla fine del file senza cancellare il contenuto precedente)
     if (file.is_open()) {
         file << transactiontoString() << "\n----------------------\n";
-        file.close(); // chiude il file per salvare correttamente i dati
+        file.close();
     } else {
         throw std::runtime_error("Impossibile aprire il file " + filename); //se file non si apre manda messaggio di errore
     }

@@ -21,7 +21,7 @@ int main() {
 
         cout << "=== INIZIO PROGRAMMA GESTIONE CONTI CORRENTI ===" << endl;
 
-        // Pulizia dei file all'inizio
+        // Pulizia dei file di testo all'inizio
         clearFile(fileTransazioni);
         clearFile(fileConti);
 
@@ -31,7 +31,7 @@ int main() {
 
         cout << "\nConti creati." << endl;
 
-        // Salvataggio conti iniziali su fileConti
+        // Salvataggio conti iniziali su file di testo fileConti
         mario.writeAccountToFile(fileConti);
         laura.writeAccountToFile(fileConti);
 
@@ -45,7 +45,7 @@ int main() {
         mario.addTransaction(affitto);
         mario.addTransaction(spesa);
 
-        // Salvataggio delle transazioni su file
+        // Salvataggio delle transazioni su file di testo fileTransazioni
         mario.writeTransactionsToFile(fileTransazioni);
         cout << "\nTransazioni aggiunte al conto di Mario e salvate su file." << endl;
 
@@ -58,20 +58,18 @@ int main() {
         laura.writeAccountToFile(fileConti);
         cout << "Conti aggiornati salvati su file." << endl;
 
-        // CREAZIONE DI NUOVE TRANSAZIONI DA AGGIUNGERE AL FILE
+        // Creazione di nuove transazioni da aggiungere al fileTransazioni
         Transaction bonus(1004, 300.0, TransactionType::Incoming, "Bonus produttività");
         Transaction bollette(1005, 150.0, TransactionType::Outgoing, "Pagamento bollette");
-
-        // Salvataggio delle nuove transazioni direttamente sul file
         bonus.writeTransactionToFile(fileTransazioni);
         bollette.writeTransactionToFile(fileTransazioni);
 
         cout << "\nNuove transazioni aggiunte al file delle transazioni." << endl;
 
-        // Caricamento transazioni dal file Transazioni in un nuovo account
+        // Caricamento transazioni dal file di testo fileTransazioni in un nuovo account
         Account nuovo("Giuseppe Verdi", "IT99C5555555555555555555555", 2000.0);
         nuovo.loadTransactionsFromFile(fileTransazioni);
-        cout << "\nNuovo conto creato e transazioni caricate dal file." << endl;
+        cout << "\nNuovo conto creato e transazioni caricate dal file di testo." << endl;
 
         // Salvataggio nuovo conto su file
         nuovo.writeAccountToFile(fileConti);
@@ -83,7 +81,7 @@ int main() {
         cout << nuovo.accountToString() << endl;
 
 
-        cout << "\n=== RICERCA TRANSAZIONI PER PAROLA CHIAVE ===" << endl;
+        cout << "\n=== RICERCA TRANSAZIONI DATA PAROLA CHIAVE ===" << endl;
         std::string parolaChiave = "spesa";
 
         auto transazioniTrovate = mario.searchTransactionsByWord(parolaChiave);
@@ -97,7 +95,7 @@ int main() {
             }
         }
 
-        // --- ESEMPIO SIMULAZIONE INTERESSE COMPOSTO SU DIVERSI TASSI ---
+        //Simulazione interesse composto su diversi tassi annui
         cout << "\n=== SIMULAZIONE SALDO ANNUALE CON INTERESSE COMPOSTO ===" << endl;
 
         double risparmioMensile = 100.0; // esempio di risparmio mensile
@@ -109,8 +107,7 @@ int main() {
                  << risparmioMensile << "€, il saldo simulato dopo 1 anno sarà: "
                  << saldoFinale << "€" << endl;
         }
-
-
+        
 
         cout << "\n=== PROGRAMMA COMPLETATO CON SUCCESSO ===" << endl;
         cout << "File generati: " << fileTransazioni << " (transazioni), " << fileConti << " (conti correnti)" << endl;

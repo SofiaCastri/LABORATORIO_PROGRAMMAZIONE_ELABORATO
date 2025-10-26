@@ -74,6 +74,8 @@ vector<Transaction> Account::searchTransactionByType(TransactionType type) const
     }
     return filteredTransactions;
 }
+
+
 std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& targetDate) const {
     // Controlla e valida la data passata come parametro
     std::tm target_tm = {};
@@ -94,7 +96,7 @@ std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& 
         throw std::invalid_argument("La data inserita non è valida (es. 30 febbraio)");
     }
 
-    time_t target_time = mktime(&target_tm);
+    time_t target_time = mktime(&target_tm); //converto in numero
     std::vector<Transaction> results;
 
     for (const auto& t : transactions) {
@@ -111,6 +113,7 @@ std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& 
     return results;
 }
 
+
 double Account::getTotalIncoming() const {
     double total = 0.0;
     auto incomingTransactions = searchTransactionByType(TransactionType::Incoming);
@@ -120,6 +123,7 @@ double Account::getTotalIncoming() const {
     return total;
 }
 
+
 double Account::getTotalOutgoing() const {
     double total = 0.0;
     auto outgoingTransactions = searchTransactionByType(TransactionType::Outgoing);
@@ -128,6 +132,7 @@ double Account::getTotalOutgoing() const {
     }
     return total;
 }
+
 
 std::vector<Transaction> Account::searchTransactionsByWord(const std::string& word) const {
     std::vector<Transaction> results;
@@ -150,6 +155,7 @@ std::vector<Transaction> Account::searchTransactionsByWord(const std::string& wo
     return results;
 }
 
+
 double Account::simulateCompoundInterest(double monthlySaving, double annualRate) const {
         double saldoSimulato = balance;                  // saldo corrente
         double monthlyRate = annualRate / 12.0 / 100.0; // tasso mensile
@@ -161,7 +167,6 @@ double Account::simulateCompoundInterest(double monthlySaving, double annualRate
         }
 
         return saldoSimulato;
-
 }
 
 
