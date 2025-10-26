@@ -438,17 +438,19 @@ TEST(AccountLoadTest, EmptyFile) {
     std::remove(fname.c_str());
 }
 
-TEST(AccountLoadTest, OutgoingExceedingBalance) {
+// Test che verifica che le transazioni in uscita che superano il saldo vengano saltate
+TEST(AccountLoadTest, OutgoingExceedingBalance_Skipped) {
     std::string fname = "test_overout.txt";
 
-    // Creo una transazione outgoing che supera il saldo iniziale
     Transaction t1(501, 200.0, TransactionType::Outgoing, "Big outgoing");
     t1.writeTransactionToFile(fname);
 
-    // Creo un nuovo account con saldo troppo basso per coprire la transazione
     Account acc("Test", "IT000", 100.0);
+    acc.loadTransactionsFromFile(fname);
 
-    // Mi aspetto che durante il caricamento venga lanciata un'eccezione per saldo insufficiente
-    EXPECT_THROW(acc.loadTransactionsFromFile(fname), std::runtime_error);
+    // La transazione dovrebbe essere saltata, quindi saldo e numero transazioni invariati
+    EXPECT_EQ(acc.getTransactionSize(), 0);
+    EXPECT_DOUBLE_EQ(acc.getBalance(), 100.0);
+
     std::remove(fname.c_str());
 }

@@ -277,8 +277,13 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
                 if (id != 0 && amount > 0.0) {
                     Transaction t(id, amount, type, description);
                     t.setDate(date);
-                    addTransaction(t);
-                    std::cout << "Aggiunta transazione ID: " << id << std::endl;
+                    try {
+                        addTransaction(t);
+                        std::cout << "Aggiunta transazione ID: " << id << std::endl;
+                    } catch (const std::runtime_error& e) {
+                        std::cerr << "Transazione ID " << id << " saltata: " << e.what() << std::endl;
+                        // continua senza bloccare il caricamento
+                    }
                 }
                 readingTransaction = false;
             }
