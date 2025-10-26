@@ -193,6 +193,32 @@ TEST(AccountTest, TotalOutgoing) {
     EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
 }
 
+
+// Test che verifica che la ricerca su un account senza transazioni ritorni un vettore vuoto
+TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
+    Account acc("Empty User", "IT00000", 500.0);
+
+    auto results = acc.searchTransactionsByWord("spesa");
+    EXPECT_TRUE(results.empty());
+}
+
+// Test che verifica la ricerca case-insensitive
+TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
+    Account acc("Mario Rossi", "IT12345", 1000.0);
+    acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
+    acc.addTransaction(Transaction(2, 200.0, TransactionType::Outgoing, "Pagamento affitto"));
+
+    auto results = acc.searchTransactionsByWord("SPESA");
+    ASSERT_EQ(results.size(), 1);
+    EXPECT_EQ(results[0].getDescription(), "Spesa supermercato");
+}
+
+
+
+
+
+
+
 TEST(AccountTest, WriteTransactionsToFile) {
     Account acc("Test User", "IT99999", 1000.0);
 
