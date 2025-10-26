@@ -82,6 +82,22 @@ int main() {
         cout << laura.accountToString() << endl;
         cout << nuovo.accountToString() << endl;
 
+
+        cout << "\n=== RICERCA TRANSAZIONI PER PAROLA CHIAVE ===" << endl;
+        std::string parolaChiave = "spesa";
+
+        auto transazioniTrovate = mario.searchTransactionsByWord(parolaChiave);
+
+        if (transazioniTrovate.empty()) {
+            cout << "Nessuna transazione trovata per la parola chiave: " << parolaChiave << endl;
+        } else {
+            cout << "Transazioni trovate per la parola chiave '" << parolaChiave << "':\n";
+            for (const auto& t : transazioniTrovate) {
+                cout << t.transactiontoString() << "\n";
+            }
+        }
+
+
         cout << "\n=== PROGRAMMA COMPLETATO CON SUCCESSO ===" << endl;
         cout << "File generati: " << fileTransazioni << " (transazioni), " << fileConti << " (conti correnti)" << endl;
 
