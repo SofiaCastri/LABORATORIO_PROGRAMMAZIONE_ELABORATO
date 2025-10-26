@@ -129,6 +129,31 @@ double Account::getTotalOutgoing() const {
     return total;
 }
 
+std::vector<Transaction> Account::searchTransactionsByWord(const std::string& word) const {
+    std::vector<Transaction> results;
+
+    if (word.empty()) return results; // Se la parola chiave è vuota, ritorna direttamente un vettore vuoto
+
+    std::string keywordLower = word;
+    // Conversione temporanea della parola chiave in minuscolo
+    std::transform(keywordLower.begin(), keywordLower.end(), keywordLower.begin(), ::tolower);
+
+    for (const auto& t : transactions) {
+        std::string descriptionLower = t.getDescription();
+        std::transform(descriptionLower.begin(), descriptionLower.end(), descriptionLower.begin(), ::tolower);
+
+        if (descriptionLower.find(keywordLower) != std::string::npos) {
+            results.push_back(t);
+        }
+    }
+
+    return results;
+}
+
+
+
+
+
 void Account::writeTransactionsToFile(const std::string& filename) const {
     std::ofstream file(filename, std::ios::app); // apre il file in modalità append
     if (!file.is_open()) {

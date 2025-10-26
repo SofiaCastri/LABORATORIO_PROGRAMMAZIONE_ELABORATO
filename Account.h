@@ -29,6 +29,8 @@ public: Account(const std::string& name, const std::string& iban, double balance
     std::vector<Transaction> findTransactionsBeforeDate(const std::string& targetDate) const;
     double getTotalIncoming() const; // Calcola il totale di tutte le transazioni in entrata
     double getTotalOutgoing() const; // Calcola il totale di tutte le transazioni in uscita
+    std::vector<Transaction> searchTransactionsByWord(const std::string& keyword) const; // Restituisce tutte le transazioni che contengono la parola chiave specificata nella descrizione
+
 
     //metodi per scrivere  e leggere da file
     void writeTransactionsToFile(const std::string& filename) const;
