@@ -34,6 +34,7 @@ TEST(AccountTest, AddTransactionIncoming) {
     ASSERT_EQ(transactions.size(), 1); // deve esserci una transazione in entrata
     EXPECT_EQ(transactions[0].getDescription(), "Deposit");
 }
+
 // Test addTransaction con Outgoing
 TEST(AccountTest, AddTransactionOutgoing) {
     Account acc("Charlie", "IT789", 800.0);
@@ -61,7 +62,6 @@ TEST(AccountTest, AddTransactionOutgoingInsufficientBalanceThrows) {
     auto transactions = acc.searchTransactionByType(TransactionType::Outgoing);
     EXPECT_TRUE(transactions.empty());
 }
-
 
 // Test transferTo con successo
 TEST(AccountTest, TransferToSuccess) {
@@ -107,6 +107,7 @@ TEST(AccountTest, TransferInsufficientBalanceThrows) {
     EXPECT_TRUE(bob.searchTransactionByType(TransactionType::Incoming).empty());
 }
 
+//test ricerca per tipo
 TEST(AccountTest, SearchTransactionByType) {
     Account acc("TestUser", "IT123", 1000.0);
 
@@ -130,7 +131,7 @@ TEST(AccountTest, SearchTransactionByType) {
     EXPECT_EQ(outgoing[0].getDescription(), "Groceries");
 }
 
-
+// Test findTransactionsBeforeDate trova correttamente le transazioni prima di una data specifica
 TEST(AccountDateSearchTest, FindsTransactionsBeforeGivenDate) {
     Account acc("Mario Rossi", "IT1234567890", 1000.0);
 
@@ -154,6 +155,7 @@ TEST(AccountDateSearchTest, FindsTransactionsBeforeGivenDate) {
     EXPECT_EQ(results[0].getDescription(), "Stipendio");
 }
 
+// Test che verifica che venga lanciata un'eccezione se la data passata è invalida
 TEST(AccountDateSearchTest, InvalidDateThrowsException) {
     Account acc("Mario Rossi", "IT1234567890", 1000.0);
     EXPECT_THROW(acc.findTransactionsBeforeDate("2025-99-99 00:00:00"), std::invalid_argument);
@@ -171,7 +173,6 @@ TEST(AccountDateSearchTest, NoTransactionsBeforeDate) {
 
     EXPECT_TRUE(results.empty());
 }
-
 
 //test totale entrate
 TEST(AccountTest, TotalIncoming) {
@@ -193,7 +194,7 @@ TEST(AccountTest, TotalOutgoing) {
     EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
 }
 
-// Test: ricerca su account senza transazioni deve restituire vettore vuoto
+// Test ricerca data paroal chiave su account senza transazioni deve restituire vettore vuoto
 TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
     Account acc("Empty User", "IT00000", 500.0);
 
@@ -201,7 +202,7 @@ TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
     EXPECT_TRUE(results.empty());
 }
 
-// Test: ricerca case-insensitive
+// Test ricerca case-insensitive
 TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
     Account acc("Mario Rossi", "IT12345", 1000.0);
     acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
@@ -212,7 +213,7 @@ TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
     EXPECT_EQ(results[0].getDescription(), "Spesa supermercato");
 }
 
-// Test: parola chiave non presente restituisce vettore vuoto
+// Test parola chiave non presente restituisce vettore vuoto
 TEST(AccountTest, SearchTransactionsByWord_NotFound) {
     Account acc("Mario Rossi", "IT12345", 1000.0);
     acc.addTransaction(Transaction(1, 1200.0, TransactionType::Incoming, "Stipendio mensile"));
@@ -236,9 +237,7 @@ TEST(AccountTest, SearchTransactionsByWord_MultipleMatches) {
     EXPECT_EQ(results[1].getDescription(), "spesa carburante");
 }
 
-
-
-//test interessi composti
+//test simulazione interessi composti
 TEST(AccountTest, SimulateCompoundInterest_WithMonthlySaving) {
     Account acc("Laura Bianchi", "IT99B9876543210987654321098", 1000.0);
 
@@ -257,6 +256,7 @@ TEST(AccountTest, SimulateCompoundInterest_WithMonthlySaving) {
     EXPECT_NEAR(saldoSimulato, expected, 0.01);
 }
 
+//test scrittura transazioni su file
 TEST(AccountTest, WriteTransactionsToFile) {
     Account acc("Test User", "IT99999", 1000.0);
 
@@ -270,7 +270,7 @@ TEST(AccountTest, WriteTransactionsToFile) {
     std::string filename = "file_transazioni_account_test.txt";
     std::ofstream(filename, std::ios::trunc).close();// Pulisco eventuale file precedente
 
-    acc.writeTransactionsToFile(filename); // Scrivo le transazioni su file usando il metodo della classe Account
+    acc.writeTransactionsToFile(filename);
     ASSERT_TRUE(std::filesystem::exists(filename));
     std::ifstream file(filename);
     ASSERT_TRUE(file.is_open());
@@ -413,8 +413,8 @@ TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
 
     // Prima caricamento
     account.loadTransactionsFromFile(filename);
-    EXPECT_EQ(account.getTransactionSize(), 2); // Ora puoi usare getTransactionSize()
-    EXPECT_DOUBLE_EQ(account.getBalance(), 575.0); // 500 + 100 - 25
+    EXPECT_EQ(account.getTransactionSize(), 2);
+    EXPECT_DOUBLE_EQ(account.getBalance(), 575.0);
 
     // Secondo caricamento - le transazioni dovrebbero essere saltate
     account.loadTransactionsFromFile(filename);
@@ -424,10 +424,10 @@ TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
     std::remove(filename.c_str());
 }
 
-// 2. File vuoto → nessuna transazione caricata, saldo invariato
+// File vuoto → nessuna transazione caricata, saldo invariato
 TEST(AccountLoadTest, EmptyFile) {
     std::string fname = "test_empty.txt";
-    std::ofstream(fname, std::ios::trunc).close();  // crea/azzerra
+    std::ofstream(fname, std::ios::trunc).close();
     Account acc("Test", "IT000", 500.0);
 
     acc.loadTransactionsFromFile(fname);
