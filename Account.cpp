@@ -220,6 +220,56 @@ void Account::writeAccountToFile(const std::string& filename) const {
 }
 
 
+void Account::readTransactionLine(const std::string& line, int& id, double& amount, TransactionType& type, std::string& date, std::string& description, bool& readingTransaction) {
+
+    if (line.find("ID: ") != std::string::npos) {
+        id = std::stoi(line.substr(4)); // estrapolo ID
+
+        // controlla duplicati
+        bool exists = false;
+        for (const auto& t : transactions) {
+            if (t.getTransactionId() == id) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (exists) {
+            readingTransaction = false; // skip
+            return; // interrompi elaborazione della riga
+        }
+    }
+    else if (line.find("Amount: ") != std::string::npos) {
+        amount = std::stod(line.substr(8));
+    }
+    else if (line.find("Type: ") != std::string::npos) {
+        std::string typeStr = line.substr(6);
+        type = (typeStr == "Incoming" ? TransactionType::Incoming : TransactionType::Outgoing);
+    }
+    else if (line.find("Date: ") != std::string::npos) {
+        date = line.substr(6);
+    }
+    else if (line.find("Description: ") != std::string::npos) {
+        description = line.substr(13);
+    }
+    else if (line.find("----------------------") != std::string::npos) {
+        // fine di una transazione completa
+        if (id != 0 && amount > 0.0) {
+            Transaction t(id, amount, type, description);
+            t.setDate(date);
+            try {
+                addTransaction(t);
+                std::cout << "Aggiunta transazione ID: " << id << std::endl;
+            } catch (const std::runtime_error& e) {
+                std::cerr << "Transazione ID " << id << " saltata: " << e.what() << std::endl;
+            }
+        }
+        readingTransaction = false;
+    }
+}
+
+
+
 void Account::loadTransactionsFromFile(const std::string& filename) {
     //apertura file di testo. se l'apertura dovesse fallire lancia un eccezione
     std::ifstream file(filename);
@@ -247,51 +297,7 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
         }
 
         if (readingTransaction) {
-            if (line.find("ID: ") != std::string::npos) {
-                id = std::stoi(line.substr(4)); //estrapolo ID
-
-                // controlla duplicati
-                bool exists = false;
-                for (const auto& t : transactions) {
-                    if (t.getTransactionId() == id) {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (exists) {
-                    readingTransaction = false; // skip
-                    continue;
-                }
-            }
-            else if (line.find("Amount: ") != std::string::npos) {
-                amount = std::stod(line.substr(8));
-            }
-            else if (line.find("Type: ") != std::string::npos) {
-                std::string typeStr = line.substr(6);
-                type = (typeStr == "Incoming" ? TransactionType::Incoming : TransactionType::Outgoing);
-            }
-            else if (line.find("Date: ") != std::string::npos) {
-                date = line.substr(6);
-            }
-            else if (line.find("Description: ") != std::string::npos) {
-                description = line.substr(13);
-            }
-            else if (line.find("----------------------") != std::string::npos) {
-                // fine di una transazione completa
-                if (id != 0 && amount > 0.0) {
-                    Transaction t(id, amount, type, description);
-                    t.setDate(date);
-                    try {
-                        addTransaction(t);
-                        std::cout << "Aggiunta transazione ID: " << id << std::endl;
-                    } catch (const std::runtime_error& e) {
-                        std::cerr << "Transazione ID " << id << " saltata: " << e.what() << std::endl;
-                        // continua senza bloccare il caricamento
-                    }
-                }
-                readingTransaction = false;
-            }
+            readTransactionLine(line, id, amount, type, date, description, readingTransaction);
         }
     }
 
