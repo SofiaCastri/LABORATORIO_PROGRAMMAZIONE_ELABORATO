@@ -150,7 +150,19 @@ std::vector<Transaction> Account::searchTransactionsByWord(const std::string& wo
     return results;
 }
 
+double Account::simulateCompoundInterest(double monthlySaving, double annualRate) const {
+        double saldoSimulato = balance;                  // saldo corrente
+        double monthlyRate = annualRate / 12.0 / 100.0; // tasso mensile
 
+        for (int i = 0; i < 12; ++i) {
+            saldoSimulato += monthlySaving;                     // aggiungi risparmio mensile
+            double interesseMensile = saldoSimulato * monthlyRate; // calcola interesse del mese
+            saldoSimulato += interesseMensile;
+        }
+
+        return saldoSimulato;
+
+}
 
 
 
