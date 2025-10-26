@@ -201,7 +201,7 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
             amount = 0.0;
             date.clear();
             description.clear();
-            continue;
+            continue; //vado al ciclo while successivo (riga successiva)
         }
 
         if (readingTransaction) {
