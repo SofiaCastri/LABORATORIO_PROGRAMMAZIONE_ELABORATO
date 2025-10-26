@@ -97,6 +97,20 @@ int main() {
             }
         }
 
+        // --- ESEMPIO SIMULAZIONE INTERESSE COMPOSTO SU DIVERSI TASSI ---
+        cout << "\n=== SIMULAZIONE SALDO ANNUALE CON INTERESSE COMPOSTO ===" << endl;
+
+        double risparmioMensile = 100.0; // esempio di risparmio mensile
+        std::vector<double> tassiAnnui = {1.0, 2.5, 5.0}; // tassi annui in percentuale
+
+        for (double tasso : tassiAnnui) {
+            double saldoFinale = mario.simulateCompoundInterest(risparmioMensile, tasso);
+            cout << "Con tasso annuo " << tasso << "% e risparmio mensile di "
+                 << risparmioMensile << "€, il saldo simulato dopo 1 anno sarà: "
+                 << saldoFinale << "€" << endl;
+        }
+
+
 
         cout << "\n=== PROGRAMMA COMPLETATO CON SUCCESSO ===" << endl;
         cout << "File generati: " << fileTransazioni << " (transazioni), " << fileConti << " (conti correnti)" << endl;
