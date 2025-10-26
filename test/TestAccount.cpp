@@ -193,8 +193,7 @@ TEST(AccountTest, TotalOutgoing) {
     EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
 }
 
-
-// Test che verifica che la ricerca su un account senza transazioni ritorni un vettore vuoto
+// Test: ricerca su account senza transazioni deve restituire vettore vuoto
 TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
     Account acc("Empty User", "IT00000", 500.0);
 
@@ -202,7 +201,7 @@ TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
     EXPECT_TRUE(results.empty());
 }
 
-// Test che verifica la ricerca case-insensitive
+// Test: ricerca case-insensitive
 TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
     Account acc("Mario Rossi", "IT12345", 1000.0);
     acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
@@ -213,7 +212,7 @@ TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
     EXPECT_EQ(results[0].getDescription(), "Spesa supermercato");
 }
 
-// Test che verifica la ricerca con parola chiave non presente
+// Test: parola chiave non presente restituisce vettore vuoto
 TEST(AccountTest, SearchTransactionsByWord_NotFound) {
     Account acc("Mario Rossi", "IT12345", 1000.0);
     acc.addTransaction(Transaction(1, 1200.0, TransactionType::Incoming, "Stipendio mensile"));
@@ -222,8 +221,7 @@ TEST(AccountTest, SearchTransactionsByWord_NotFound) {
     EXPECT_TRUE(results.empty());
 }
 
-
-// Test che verifica più risultati per la stessa parola chiave
+// Test: più transazioni corrispondenti alla stessa parola chiave
 TEST(AccountTest, SearchTransactionsByWord_MultipleMatches) {
     Account acc("Mario Rossi", "IT12345", 1000.0);
     acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
@@ -232,11 +230,32 @@ TEST(AccountTest, SearchTransactionsByWord_MultipleMatches) {
 
     auto results = acc.searchTransactionsByWord("spesa");
     ASSERT_EQ(results.size(), 2);
+
+    // Controllo che siano le descrizioni corrette
+    EXPECT_EQ(results[0].getDescription(), "Spesa supermercato");
+    EXPECT_EQ(results[1].getDescription(), "spesa carburante");
 }
 
 
 
+//test interessi composti
+TEST(AccountTest, SimulateCompoundInterest_WithMonthlySaving) {
+    Account acc("Laura Bianchi", "IT99B9876543210987654321098", 1000.0);
 
+    double monthlySaving = 100.0;  // risparmio mensile
+    double annualRate = 6.0;       // 6% annuo
+    double saldoSimulato = acc.simulateCompoundInterest(monthlySaving, annualRate);
+
+    // Calcolo manuale interesse composto
+    double monthlyRate = annualRate / 12.0 / 100.0;
+    double expected = 1000.0;
+    for (int i = 0; i < 12; ++i) {
+        expected += monthlySaving;
+        expected += expected * monthlyRate;
+    }
+
+    EXPECT_NEAR(saldoSimulato, expected, 0.01);
+}
 
 TEST(AccountTest, WriteTransactionsToFile) {
     Account acc("Test User", "IT99999", 1000.0);
@@ -267,6 +286,7 @@ TEST(AccountTest, WriteTransactionsToFile) {
     EXPECT_NE(content.find("Incoming"), std::string::npos);
     EXPECT_NE(content.find("Outgoing"), std::string::npos);
 }
+
 
 // Test che verifica il comportamento quando il vettore di transazioni è vuoto
 TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
