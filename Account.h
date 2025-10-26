@@ -38,7 +38,8 @@ public: Account(const std::string& name, const std::string& iban, double balance
     void writeTransactionsToFile(const std::string& filename) const;
     std::string accountToString() const;
     void writeAccountToFile(const std::string& filename) const;
-    void readTransactionLine(const std::string& line, int& id, double& amount, TransactionType& type, std::string& date, std::string& description,bool& readingTransaction);
+    bool isDuplicateTransaction(int id) const;
+    void readTransactionLine(const std::string& line, int& id, double& amount, TransactionType& type, std::string& date, std::string& description, bool& readingTransaction);
     void loadTransactionsFromFile(const std::string& filename); //legge su file e salva le transazioni sul conto
 
 private:

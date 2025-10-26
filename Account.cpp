@@ -220,23 +220,24 @@ void Account::writeAccountToFile(const std::string& filename) const {
 }
 
 
+bool Account::isDuplicateTransaction(int id) const {
+    for (const auto& t : transactions) {
+        if (t.getTransactionId() == id) {
+            return true; // trovato duplicato
+        }
+    }
+    return false;
+}
+
+
 void Account::readTransactionLine(const std::string& line, int& id, double& amount, TransactionType& type, std::string& date, std::string& description, bool& readingTransaction) {
 
     if (line.find("ID: ") != std::string::npos) {
         id = std::stoi(line.substr(4)); // estrapolo ID
 
-        // controlla duplicati
-        bool exists = false;
-        for (const auto& t : transactions) {
-            if (t.getTransactionId() == id) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (exists) {
-            readingTransaction = false; // skip
-            return; // interrompi elaborazione della riga
+        if (isDuplicateTransaction(id)) {
+            readingTransaction = false;
+            return;
         }
     }
     else if (line.find("Amount: ") != std::string::npos) {
