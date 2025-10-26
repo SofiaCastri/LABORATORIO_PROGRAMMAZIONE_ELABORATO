@@ -213,7 +213,26 @@ TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
     EXPECT_EQ(results[0].getDescription(), "Spesa supermercato");
 }
 
+// Test che verifica la ricerca con parola chiave non presente
+TEST(AccountTest, SearchTransactionsByWord_NotFound) {
+    Account acc("Mario Rossi", "IT12345", 1000.0);
+    acc.addTransaction(Transaction(1, 1200.0, TransactionType::Incoming, "Stipendio mensile"));
 
+    auto results = acc.searchTransactionsByWord("bonus");
+    EXPECT_TRUE(results.empty());
+}
+
+
+// Test che verifica più risultati per la stessa parola chiave
+TEST(AccountTest, SearchTransactionsByWord_MultipleMatches) {
+    Account acc("Mario Rossi", "IT12345", 1000.0);
+    acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
+    acc.addTransaction(Transaction(2, 50.0, TransactionType::Outgoing, "spesa carburante"));
+    acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Bollette Gas"));
+
+    auto results = acc.searchTransactionsByWord("spesa");
+    ASSERT_EQ(results.size(), 2);
+}
 
 
 
