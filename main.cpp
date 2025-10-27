@@ -28,6 +28,8 @@ int main() {
         // Creazione dei conti
         Account mario("Mario Rossi", "IT99A0123456789012345678901", 1500.0);
         Account laura("Laura Bianchi", "IT99B9876543210987654321098", 800.0);
+        std::cout << "conto di: "<<mario.getName()<<" Saldo iniziale: " << mario.getBalance() << std::endl;
+
 
         cout << "\nConti creati." << endl;
 
@@ -107,7 +109,7 @@ int main() {
                  << risparmioMensile << "€, il saldo simulato dopo 1 anno sarà: "
                  << saldoFinale << "€" << endl;
         }
-        
+
 
         cout << "\n=== PROGRAMMA COMPLETATO CON SUCCESSO ===" << endl;
         cout << "File generati: " << fileTransazioni << " (transazioni), " << fileConti << " (conti correnti)" << endl;
