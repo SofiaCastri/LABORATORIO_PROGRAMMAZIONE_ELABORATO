@@ -292,7 +292,7 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
             readingTransaction = true; //trovata transazione
             id = 0;
             amount = 0.0;
-            date.clear();
+            date="2000-01-01 00:00:00";
             description.clear();
             continue; //vado al ciclo while successivo (riga successiva)
         }
