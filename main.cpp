@@ -24,6 +24,7 @@ int main() {
         // Pulizia dei file di testo all'inizio
         clearFile(fileTransazioni);
         clearFile(fileConti);
+        Transaction::resetIdCounter(1000); //contatore statico lo faccio partire da 1000
 
         // Creazione dei conti
         Account mario("Mario Rossi", "IT99A0123456789012345678901", 1500.0);
@@ -38,9 +39,9 @@ int main() {
         laura.writeAccountToFile(fileConti);
 
         // Creazione transazioni
-        Transaction stipendio(1001, 1200.0, TransactionType::Incoming, "Stipendio mensile");
-        Transaction affitto(1002, 600.0, TransactionType::Outgoing, "Pagamento affitto");
-        Transaction spesa(1003, 85.50, TransactionType::Outgoing, "Spesa supermercato");
+        Transaction stipendio( 1200.0, TransactionType::Incoming, "Stipendio mensile");
+        Transaction affitto( 600.0, TransactionType::Outgoing, "Pagamento affitto");
+        Transaction spesa( 85.50, TransactionType::Outgoing, "Spesa supermercato");
 
         // Aggiunta delle transazioni al conto di Mario
         mario.addTransaction(stipendio);
@@ -61,8 +62,8 @@ int main() {
         cout << "Conti aggiornati salvati su file." << endl;
 
         // Creazione di nuove transazioni da aggiungere al fileTransazioni
-        Transaction bonus(1004, 300.0, TransactionType::Incoming, "Bonus produttività");
-        Transaction bollette(1005, 150.0, TransactionType::Outgoing, "Pagamento bollette");
+        Transaction bonus( 300.0, TransactionType::Incoming, "Bonus produttività");
+        Transaction bollette( 150.0, TransactionType::Outgoing, "Pagamento bollette");
         bonus.writeTransactionToFile(fileTransazioni);
         bollette.writeTransactionToFile(fileTransazioni);
 

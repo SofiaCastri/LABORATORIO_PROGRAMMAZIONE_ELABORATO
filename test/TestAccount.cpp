@@ -24,8 +24,9 @@ TEST(AccountConstructorTest, NegativeInitialBalanceThrows) {
 
 // Test addTransaction con Incoming
 TEST(AccountTest, AddTransactionIncoming) {
+    Transaction::resetIdCounter();
     Account acc("Bob", "IT456", 500.0);
-    Transaction t(1, 200.0, TransactionType::Incoming, "Deposit");
+    Transaction t( 200.0, TransactionType::Incoming, "Deposit");
 
     acc.addTransaction(t);
 
@@ -37,8 +38,9 @@ TEST(AccountTest, AddTransactionIncoming) {
 
 // Test addTransaction con Outgoing
 TEST(AccountTest, AddTransactionOutgoing) {
+    Transaction::resetIdCounter();
     Account acc("Charlie", "IT789", 800.0);
-    Transaction t(2, 300.0, TransactionType::Outgoing, "Payment");
+    Transaction t(300.0, TransactionType::Outgoing, "Payment");
 
     acc.addTransaction(t);
 
@@ -50,8 +52,9 @@ TEST(AccountTest, AddTransactionOutgoing) {
 
 // Test addTransaction con Outgoing che supera il saldo
 TEST(AccountTest, AddTransactionOutgoingInsufficientBalanceThrows) {
+    Transaction::resetIdCounter();
     Account acc("Diana", "IT999", 100.0);
-    Transaction t(3, 200.0, TransactionType::Outgoing, "Big Payment");
+    Transaction t(200.0, TransactionType::Outgoing, "Big Payment");
 
     EXPECT_THROW(acc.addTransaction(t), std::runtime_error);
 
@@ -65,6 +68,7 @@ TEST(AccountTest, AddTransactionOutgoingInsufficientBalanceThrows) {
 
 // Test transferTo con successo
 TEST(AccountTest, TransferToSuccess) {
+    Transaction::resetIdCounter();
     Account alice("Alice", "IT111", 1000.0);
     Account bob("Bob", "IT222", 500.0);
 
@@ -85,6 +89,7 @@ TEST(AccountTest, TransferToSuccess) {
 
 // Test transferTo con importo negativo → eccezione
 TEST(AccountTest, TransferNegativeAmountThrows) {
+    Transaction::resetIdCounter();
     Account alice("Alice", "IT111", 1000.0);
     Account bob("Bob", "IT222", 500.0);
 
@@ -93,6 +98,7 @@ TEST(AccountTest, TransferNegativeAmountThrows) {
 
 // Test transferTo con saldo insufficiente → eccezione
 TEST(AccountTest, TransferInsufficientBalanceThrows) {
+    Transaction::resetIdCounter();
     Account alice("Alice", "IT111", 100.0);
     Account bob("Bob", "IT222", 500.0);
 
@@ -109,11 +115,12 @@ TEST(AccountTest, TransferInsufficientBalanceThrows) {
 
 //test ricerca per tipo
 TEST(AccountTest, SearchTransactionByType) {
+    Transaction::resetIdCounter();
     Account acc("TestUser", "IT123", 1000.0);
 
-    Transaction t1(1, 100.0, TransactionType::Incoming, "Salary");
-    Transaction t2(2, 50.0, TransactionType::Outgoing, "Groceries");
-    Transaction t3(3, 200.0, TransactionType::Incoming, "Bonus");
+    Transaction t1( 100.0, TransactionType::Incoming, "Salary");
+    Transaction t2( 50.0, TransactionType::Outgoing, "Groceries");
+    Transaction t3( 200.0, TransactionType::Incoming, "Bonus");
 
     acc.addTransaction(t1);
     acc.addTransaction(t2);
@@ -133,18 +140,19 @@ TEST(AccountTest, SearchTransactionByType) {
 
 // Test findTransactionsBeforeDate trova correttamente le transazioni prima di una data specifica
 TEST(AccountDateSearchTest, FindsTransactionsBeforeGivenDate) {
+    Transaction::resetIdCounter();
     Account acc("Mario Rossi", "IT1234567890", 1000.0);
 
     //Aggiungo alcune transazioni con date specifiche
-    Transaction t1(1, 100.0, TransactionType::Incoming, "Stipendio");
+    Transaction t1( 100.0, TransactionType::Incoming, "Stipendio");
     t1.setDate("2025-09-25 10:00:00");
     acc.addTransaction(t1);
 
-    Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa");
+    Transaction t2( 50.0, TransactionType::Outgoing, "Spesa");
     t2.setDate("2025-09-26 12:00:00");
     acc.addTransaction(t2);
 
-    Transaction t3(3, 200.0, TransactionType::Incoming, "Bonus");
+    Transaction t3( 200.0, TransactionType::Incoming, "Bonus");
     t3.setDate("2025-09-27 15:00:00");
     acc.addTransaction(t3);
 
@@ -163,9 +171,10 @@ TEST(AccountDateSearchTest, InvalidDateThrowsException) {
 
 // Nessuna transazione prima di settembre
 TEST(AccountDateSearchTest, NoTransactionsBeforeDate) {
+    Transaction::resetIdCounter();
     Account acc("Luca", "IT555", 1000.0);
 
-    Transaction t1(1, 100.0, TransactionType::Incoming, "Bonus");
+    Transaction t1( 100.0, TransactionType::Incoming, "Bonus");
     t1.setDate("2025-10-10 10:00:00");
     acc.addTransaction(t1);
 
@@ -176,20 +185,22 @@ TEST(AccountDateSearchTest, NoTransactionsBeforeDate) {
 
 //test totale entrate
 TEST(AccountTest, TotalIncoming) {
+    Transaction::resetIdCounter();
     Account acc("Dora", "IT333", 1000.0);
-    acc.addTransaction(Transaction(1, 100.0, TransactionType::Incoming, "Salary"));
-    acc.addTransaction(Transaction(2, 50.0, TransactionType::Incoming, "Gift"));
-    acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Groceries"));
+    acc.addTransaction(Transaction( 100.0, TransactionType::Incoming, "Salary"));
+    acc.addTransaction(Transaction( 50.0, TransactionType::Incoming, "Gift"));
+    acc.addTransaction(Transaction( 30.0, TransactionType::Outgoing, "Groceries"));
 
     EXPECT_DOUBLE_EQ(acc.getTotalIncoming(), 150.0);
 }
 
 // test Totale Uscite
 TEST(AccountTest, TotalOutgoing) {
+    Transaction::resetIdCounter();
     Account acc("Eli", "IT444", 1000.0);
-    acc.addTransaction(Transaction(1, 100.0, TransactionType::Incoming, "Salary"));
-    acc.addTransaction(Transaction(2, 50.0, TransactionType::Outgoing, "Rent"));
-    acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Utilities"));
+    acc.addTransaction(Transaction( 100.0, TransactionType::Incoming, "Salary"));
+    acc.addTransaction(Transaction( 50.0, TransactionType::Outgoing, "Rent"));
+    acc.addTransaction(Transaction( 30.0, TransactionType::Outgoing, "Utilities"));
 
     EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
 }
@@ -204,9 +215,10 @@ TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
 
 // Test ricerca case-insensitive
 TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
+    Transaction::resetIdCounter();
     Account acc("Mario Rossi", "IT12345", 1000.0);
-    acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
-    acc.addTransaction(Transaction(2, 200.0, TransactionType::Outgoing, "Pagamento affitto"));
+    acc.addTransaction(Transaction( 100.0, TransactionType::Outgoing, "Spesa supermercato"));
+    acc.addTransaction(Transaction( 200.0, TransactionType::Outgoing, "Pagamento affitto"));
 
     auto results = acc.searchTransactionsByWord("SPESA");
     ASSERT_EQ(results.size(), 1);
@@ -215,8 +227,9 @@ TEST(AccountTest, SearchTransactionsByWord_CaseInsensitive) {
 
 // Test parola chiave non presente restituisce vettore vuoto
 TEST(AccountTest, SearchTransactionsByWord_NotFound) {
+    Transaction::resetIdCounter();
     Account acc("Mario Rossi", "IT12345", 1000.0);
-    acc.addTransaction(Transaction(1, 1200.0, TransactionType::Incoming, "Stipendio mensile"));
+    acc.addTransaction(Transaction( 1200.0, TransactionType::Incoming, "Stipendio mensile"));
 
     auto results = acc.searchTransactionsByWord("bonus");
     EXPECT_TRUE(results.empty());
@@ -224,10 +237,11 @@ TEST(AccountTest, SearchTransactionsByWord_NotFound) {
 
 // Test: più transazioni corrispondenti alla stessa parola chiave
 TEST(AccountTest, SearchTransactionsByWord_MultipleMatches) {
+    Transaction::resetIdCounter();
     Account acc("Mario Rossi", "IT12345", 1000.0);
-    acc.addTransaction(Transaction(1, 100.0, TransactionType::Outgoing, "Spesa supermercato"));
-    acc.addTransaction(Transaction(2, 50.0, TransactionType::Outgoing, "spesa carburante"));
-    acc.addTransaction(Transaction(3, 30.0, TransactionType::Outgoing, "Bollette Gas"));
+    acc.addTransaction(Transaction( 100.0, TransactionType::Outgoing, "Spesa supermercato"));
+    acc.addTransaction(Transaction( 50.0, TransactionType::Outgoing, "spesa carburante"));
+    acc.addTransaction(Transaction( 30.0, TransactionType::Outgoing, "Bollette Gas"));
 
     auto results = acc.searchTransactionsByWord("spesa");
     ASSERT_EQ(results.size(), 2);
@@ -258,11 +272,12 @@ TEST(AccountTest, SimulateCompoundInterest_WithMonthlySaving) {
 
 //test scrittura transazioni su file
 TEST(AccountTest, WriteTransactionsToFile) {
+    Transaction::resetIdCounter();
     Account acc("Test User", "IT99999", 1000.0);
 
     // Creo alcune transazioni
-    Transaction t1(1, 200.0, TransactionType::Incoming, "Stipendio");
-    Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa alimentare");
+    Transaction t1( 200.0, TransactionType::Incoming, "Stipendio");
+    Transaction t2( 50.0, TransactionType::Outgoing, "Spesa alimentare");
 
     acc.addTransaction(t1);
     acc.addTransaction(t2);
@@ -308,10 +323,11 @@ TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
 }
 
 TEST(AccountTest, AccountToStringWithTransactions) {
+    Transaction::resetIdCounter();
     Account acc("Alice", "IT12345", 1000.0);
 
-    Transaction t1(1, 200.0, TransactionType::Incoming, "Salary");
-    Transaction t2(2, 50.0, TransactionType::Outgoing, "Groceries");
+    Transaction t1( 200.0, TransactionType::Incoming, "Salary");
+    Transaction t2( 50.0, TransactionType::Outgoing, "Groceries");
 
     acc.addTransaction(t1);
     acc.addTransaction(t2);
@@ -346,9 +362,10 @@ TEST(AccountTest, AccountToStringNoTransactions) {
 
 // Test: scrittura account con transazioni
 TEST(AccountTest, WriteAccountToFileWithTransactions) {
+    Transaction::resetIdCounter();
     Account acc("Alice", "IT12345", 1000.0);
-    Transaction t1(1, 200.0, TransactionType::Incoming, "Stipendio");
-    Transaction t2(2, 50.0, TransactionType::Outgoing, "Spesa alimentare");
+    Transaction t1( 200.0, TransactionType::Incoming, "Stipendio");
+    Transaction t2( 50.0, TransactionType::Outgoing, "Spesa alimentare");
 
     acc.addTransaction(t1);
     acc.addTransaction(t2);
@@ -400,11 +417,12 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
 
 //caso transazioni duplicata
 TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
+    Transaction::resetIdCounter();
     std::string filename = "test_duplicates.txt";
     std::ofstream(filename, std::ios::trunc).close();
 
-    Transaction t1(400, 100.0, TransactionType::Incoming, "Bonus");
-    Transaction t2(500, 25.0, TransactionType::Outgoing, "Caffè");
+    Transaction t1( 100.0, TransactionType::Incoming, "Bonus");
+    Transaction t2( 25.0, TransactionType::Outgoing, "Caffè");
 
     t1.writeTransactionToFile(filename);
     t2.writeTransactionToFile(filename);
@@ -440,9 +458,10 @@ TEST(AccountLoadTest, EmptyFile) {
 
 // Test che verifica che le transazioni in uscita che superano il saldo vengano saltate
 TEST(AccountLoadTest, OutgoingExceedingBalance_Skipped) {
+    Transaction::resetIdCounter();
     std::string fname = "test_overout.txt";
 
-    Transaction t1(501, 200.0, TransactionType::Outgoing, "Big outgoing");
+    Transaction t1( 200.0, TransactionType::Outgoing, "Big outgoing");
     t1.writeTransactionToFile(fname);
 
     Account acc("Test", "IT000", 100.0);

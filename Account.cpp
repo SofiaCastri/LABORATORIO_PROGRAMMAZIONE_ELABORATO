@@ -55,10 +55,9 @@ void Account::transferTo(double amount, Account& receiver, const std::string& de
     if (balance < amount)
         throw std::runtime_error("Saldo insufficiente per trasferimento");
 
-    int transactionId = rand() % 90000 + 10000; // ID casuale per la transazione
-
-    Transaction senderT(transactionId, amount, TransactionType::Outgoing, description);
-    Transaction receiverT(transactionId, amount, TransactionType::Incoming, description);
+    //avranno id diverso
+    Transaction senderT( amount, TransactionType::Outgoing, description);
+    Transaction receiverT( amount, TransactionType::Incoming, description);
 
     addTransaction(senderT);        // aggiorna saldo mittente
     receiver.addTransaction(receiverT); // aggiorna saldo destinatario
@@ -256,8 +255,9 @@ void Account::readTransactionLine(const std::string& line, int& id, double& amou
     else if (line.find("----------------------") != std::string::npos) {
         // fine di una transazione completa
         if (id != 0 && amount > 0.0) {
-            Transaction t(id, amount, type, description);
+            Transaction t(amount, type, description);
             t.setDate(date);
+            t.setTransactionId(id);
             try {
                 addTransaction(t);
                 std::cout << "Aggiunta transazione ID: " << id << std::endl;

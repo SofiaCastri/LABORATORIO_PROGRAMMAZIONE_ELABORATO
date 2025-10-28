@@ -13,7 +13,7 @@ enum class TransactionType { Outgoing, Incoming };
 
 class Transaction {
 public:
-    Transaction(int id, double amount, TransactionType type, const std::string& description);
+    Transaction(double amount, TransactionType type, const std::string& description);
 
     ~Transaction() = default;
 
@@ -23,6 +23,10 @@ public:
     TransactionType getType() const;
     std::string getDate() const;
     std::string getDescription() const;
+
+    // Metodo statico per resettare o leggere il contatore
+    static void resetIdCounter(int startFrom = 0) noexcept;
+    static int getNextId() noexcept { return nextId; }
 
     // setter
     void setAmount(double amt);
@@ -47,6 +51,8 @@ private:
     string date;
     string description;
 
+    //Contatore statico condiviso da tutte le transazioni
+    inline static int nextId = 0;
 };
 
 

@@ -11,8 +11,8 @@
 #include <stdexcept>
 #include <iostream>
 
-Transaction::Transaction(int id, double amt, TransactionType t, const std::string &desc)
-        : transactionId(id), amount(amt), type(t), description(desc)
+Transaction::Transaction(double amt, TransactionType t, const std::string &desc)
+        : transactionId(++nextId), amount(amt), type(t), description(desc)
 {
     // Controllo importo
     if (amount <= 0) {
@@ -50,6 +50,11 @@ std::string Transaction::getDescription() const {
     return description;
 }
 
+void Transaction::resetIdCounter(int startFrom) noexcept {
+    nextId = startFrom;
+}
+
+
 //setter
 void Transaction::setAmount(double amt) {
     if (amt <= 0) {
@@ -64,6 +69,12 @@ void Transaction::setDescription(const std::string &descpt) {
 
 void Transaction::setTransactionId(const int Id) {
     Transaction::transactionId = Id;
+
+    // Mantengo il contatore coerente: se ricarico da file con ID alti,
+    // mi assicuro che i prossimi ID non si sovrappongano
+    if (Id > nextId) {
+        nextId = Id;
+    }
 }
 
 void Transaction::setType(const TransactionType tp) {
