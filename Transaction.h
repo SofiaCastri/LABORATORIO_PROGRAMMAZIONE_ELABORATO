@@ -26,7 +26,6 @@ public:
 
     // Metodo statico per resettare o leggere il contatore
     static void resetIdCounter(int startFrom = 0) noexcept;
-    static int getNextId() noexcept { return nextId; }
 
     // setter
     void setAmount(double amt);
