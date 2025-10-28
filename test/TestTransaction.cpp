@@ -8,7 +8,6 @@
 
 //Verifica che il costruttore imposti correttamente tutti gli attributi passati.
 TEST(TransactionTest, ConstructorValid) {
-
     Transaction::resetIdCounter(); // Reset del contatore
     Transaction t(100.0, TransactionType::Incoming, "Deposit");
 
@@ -20,11 +19,13 @@ TEST(TransactionTest, ConstructorValid) {
 
 //Verifica che il costruttore lanci un’eccezione se l’importo è negativo
 TEST(TransactionTest, ConstructorNegativeAmountThrows) {
+    Transaction::resetIdCounter();
     EXPECT_THROW(Transaction t1( -50.0, TransactionType::Outgoing, "Withdraw"), std::invalid_argument);
 }
 
 //verifica che il costruttore lanci un'eccezione se l'importo è ZERO
 TEST(TransactionTest, ConstructorZeroAmountThrows) {
+    Transaction::resetIdCounter();
     EXPECT_THROW(Transaction t2( 0.0, TransactionType::Incoming, "Zero"), std::invalid_argument);
 }
 
@@ -47,17 +48,20 @@ TEST(TransactionTest, SettersAndGetters) {
 
 //controllo setDate
 TEST(TransactionTest, SetDateValid) {
+    Transaction::resetIdCounter();
     Transaction t(150.0, TransactionType::Incoming, "Test");
     EXPECT_NO_THROW(t.setDate("2025-10-24 14:30:00"));
     EXPECT_EQ(t.getDate(), "2025-10-24 14:30:00");
 }
 //controllo setDate: formattazione sbagliata
 TEST(TransactionTest, SetDateInvalidFormatThrows) {
+    Transaction::resetIdCounter();
     Transaction t( 150.0, TransactionType::Incoming, "Test");
     EXPECT_THROW(t.setDate("24-10-2025 14:30"), std::invalid_argument);
 }
 //controllo setDate: data 30 febbraio
 TEST(TransactionTest, SetDateInvalidValueThrows) {
+    Transaction::resetIdCounter();
     Transaction t( 150.0, TransactionType::Incoming, "Test");
     EXPECT_THROW(t.setDate("2025-02-30 10:00:00"), std::invalid_argument);
 }
