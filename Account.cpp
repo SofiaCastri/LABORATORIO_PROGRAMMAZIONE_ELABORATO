@@ -257,7 +257,7 @@ void Account::readTransactionLine(const std::string& line, int& id, double& amou
         if (id != 0 && amount > 0.0) {
             Transaction t(amount, type, description);
             t.setDate(date);
-            t.setTransactionId(id);
+            t.setTransactionId(id); //imposto l'ID letto da file
             try {
                 addTransaction(t);
                 std::cout << "Aggiunta transazione ID: " << id << std::endl;

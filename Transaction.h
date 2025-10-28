@@ -24,7 +24,7 @@ public:
     std::string getDate() const;
     std::string getDescription() const;
 
-    // Metodo statico per resettare o leggere il contatore
+    // Metodo statico per resettare
     static void resetIdCounter(int startFrom = 0) noexcept;
 
     // setter
