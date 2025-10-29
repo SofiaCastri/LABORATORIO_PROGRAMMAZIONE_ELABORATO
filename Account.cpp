@@ -233,7 +233,7 @@ void Account::readTransactionLine(const std::string& line, int& id, double& amou
 
     if (line.find("ID: ") != std::string::npos) {
         id = std::stoi(line.substr(4)); // estrapolo ID
-
+        //controllo duplicati
         if (isDuplicateTransaction(id)) {
             readingTransaction = false;
             return;

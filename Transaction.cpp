@@ -70,7 +70,7 @@ void Transaction::setDescription(const std::string &descpt) {
 void Transaction::setTransactionId(const int Id) {
     Transaction::transactionId = Id;
 
-    // Mantengo il contatore coerente: se ricarico da file con ID alti,
+    // Mantengo il contatore coerente: se carico da file con ID alti,
     // mi assicuro che i prossimi ID non si sovrappongano
     if (Id > nextId) {
         nextId = Id;

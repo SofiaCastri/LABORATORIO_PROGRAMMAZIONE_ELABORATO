@@ -6,7 +6,7 @@
 #include "../Account.h"
 #include <fstream>
 
-// Test costruttore e getter
+// Test costruttore
 TEST(AccountTest, ConstructorAndGetters) {
     Account acc("Alice", "IT123", 1000.0);
 
@@ -15,8 +15,8 @@ TEST(AccountTest, ConstructorAndGetters) {
     EXPECT_DOUBLE_EQ(acc.getBalance(), 1000.0);
 }
 
+// Prova a creare un account con saldo negativo
 TEST(AccountConstructorTest, NegativeInitialBalanceThrows) {
-    // Prova a creare un account con saldo negativo
     EXPECT_THROW({
                      Account acc("Mario Rossi", "IT1234567890", -100.0);
                  }, std::invalid_argument);
@@ -58,10 +58,9 @@ TEST(AccountTest, AddTransactionOutgoingInsufficientBalanceThrows) {
 
     EXPECT_THROW(acc.addTransaction(t), std::runtime_error);
 
-    // Dopo il fallimento, il saldo deve restare invariato
+
     EXPECT_DOUBLE_EQ(acc.getBalance(), 100.0);
 
-    // E non deve esserci nessuna transazione salvata
     auto transactions = acc.searchTransactionByType(TransactionType::Outgoing);
     EXPECT_TRUE(transactions.empty());
 }
@@ -87,7 +86,7 @@ TEST(AccountTest, TransferToSuccess) {
     EXPECT_EQ(bobIncoming[0].getDescription(), "Rent");
 }
 
-// Test transferTo con importo negativo → eccezione
+// Test transferTo con importo negativo (eccezione)
 TEST(AccountTest, TransferNegativeAmountThrows) {
     Transaction::resetIdCounter();
     Account alice("Alice", "IT111", 1000.0);
@@ -96,7 +95,7 @@ TEST(AccountTest, TransferNegativeAmountThrows) {
     EXPECT_THROW(alice.transferTo(-100.0, bob, "Invalid"), std::invalid_argument);
 }
 
-// Test transferTo con saldo insufficiente → eccezione
+// Test transferTo con saldo insufficiente(eccezione)
 TEST(AccountTest, TransferInsufficientBalanceThrows) {
     Transaction::resetIdCounter();
     Account alice("Alice", "IT111", 100.0);
@@ -205,7 +204,7 @@ TEST(AccountTest, TotalOutgoing) {
     EXPECT_DOUBLE_EQ(acc.getTotalOutgoing(), 80.0);
 }
 
-// Test ricerca data paroal chiave su account senza transazioni deve restituire vettore vuoto
+// Test ricerca data parola chiave su account senza transazioni deve restituire vettore vuoto
 TEST(AccountTest, SearchTransactionsByWord_EmptyTransactions) {
     Account acc("Empty User", "IT00000", 500.0);
 
