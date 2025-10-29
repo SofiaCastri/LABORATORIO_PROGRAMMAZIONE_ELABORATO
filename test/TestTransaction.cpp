@@ -41,9 +41,11 @@ TEST(TransactionTest, SettersAndGetters) {
 
     t.setAmount(300.0);
     t.setDescription("Updated Payment");
+    t.setType(TransactionType::Incoming);
 
     EXPECT_DOUBLE_EQ(t.getAmount(), 300.0);
     EXPECT_EQ(t.getDescription(), "Updated Payment");
+    EXPECT_EQ(t.getType(), TransactionType::Incoming);
 }
 
 //controllo setDate
