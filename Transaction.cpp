@@ -77,9 +77,7 @@ void Transaction::setTransactionId(const int Id) {
     }
 }
 
-void Transaction::setType(const TransactionType tp) {
-    Transaction::type = tp;
-}
+
 
 void Transaction::setDate(const string& dt) {
 

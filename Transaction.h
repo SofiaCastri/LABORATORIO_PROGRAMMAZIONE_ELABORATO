@@ -31,7 +31,6 @@ public:
     void setAmount(double amt);
     void setDescription(const std::string& descpt) ;
     void setTransactionId(const int Id);
-    void setType(const TransactionType tp);
     void setDate(const string& dt);
 
 
