@@ -33,14 +33,16 @@ int Account::getTransactionSize() const {
 
 
 void Account::addTransaction(const Transaction& t) {
+    if (t.getType() == TransactionType::Outgoing && balance < t.getAmount()) {
+        throw std::runtime_error("Saldo insufficiente per registrare la transazione d'uscita");
+    }
+
     transactions.push_back(t);
+
+    // Aggiorno il saldo in base al tipo
     if (t.getType() == TransactionType::Incoming) {
         balance += t.getAmount();
     } else {
-        if (balance < t.getAmount()) {
-            transactions.pop_back();//  saldo insufficiente: rimuoviamo la transazione appena aggiunta (annulliamo l'operazione)
-            throw std::runtime_error("Saldo insufficiente per registrare la transazione");
-        }
         balance -= t.getAmount();
     }
 }
