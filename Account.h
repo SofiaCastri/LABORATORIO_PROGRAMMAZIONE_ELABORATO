@@ -12,14 +12,12 @@
 using namespace std;
 
 class Account {
-public: Account(const std::string& name, const std::string& iban, double balance);
+    public: Account(const std::string& name, const std::string& iban, double balance);
 
     // Getter
     std::string getName() const;
     std::string getIban() const;
     double getBalance() const;
-
-
 
     //metodi principali
     int getTransactionSize() const;
@@ -31,8 +29,6 @@ public: Account(const std::string& name, const std::string& iban, double balance
     double getTotalOutgoing() const; // Calcola il totale di tutte le transazioni in uscita
     std::vector<Transaction> searchTransactionsByWord(const std::string& keyword) const; // Restituisce tutte le transazioni che contengono la parola chiave specificata nella descrizione
     double simulateCompoundInterest(double monthlySaving, double annualRate) const; // Simula il saldo a fine anno considerando risparmi mensili (interesse composto)
-
-
 
     //metodi per scrivere  e leggere da file
     void writeTransactionsToFile(const std::string& filename) const;

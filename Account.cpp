@@ -137,7 +137,7 @@ std::vector<Transaction> Account::searchTransactionsByWord(const std::string& wo
 
     if (word.empty()) return results; // Se la parola chiave è vuota, ritorna direttamente un vettore vuoto
 
-    std::string keywordLower = word;
+    std::string keywordLower = word; //creo una nuova stringa copiando contenuto di word
     // Conversione temporanea della parola chiave in minuscolo
     std::transform(keywordLower.begin(), keywordLower.end(), keywordLower.begin(), ::tolower);
 
@@ -292,7 +292,7 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
             id = 0;
             amount = 0.0;
             date="2000-01-01 00:00:00";
-            description.clear();
+            description="nessuna descrizione";
             continue; //vado al ciclo while successivo (riga successiva)
         }
 
