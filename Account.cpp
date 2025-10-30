@@ -27,7 +27,6 @@ double Account::getBalance() const {
 }
 
 
-
 int Account::getTransactionSize() const {
     return static_cast<int>(transactions.size());
 }
