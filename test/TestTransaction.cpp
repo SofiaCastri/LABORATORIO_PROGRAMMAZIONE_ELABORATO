@@ -82,6 +82,19 @@ TEST(TransactionTest, UpdateTransaction) {
     EXPECT_EQ(t.getType(), TransactionType::Outgoing);
 }
 
+TEST(TransactionTest, UpdateInvalidDataRollback) {
+    Transaction::resetIdCounter();
+    Transaction t(100.0, TransactionType::Outgoing, "Initial Payment");
+    std::string originalDate = t.getDate();
+
+
+    EXPECT_THROW(t.update(200.0, "Invalid Update", "2025-02-30 15:00:00"), std::invalid_argument);
+
+    EXPECT_DOUBLE_EQ(t.getAmount(), 100.0);
+    EXPECT_EQ(t.getDescription(), "Initial Payment");
+    EXPECT_EQ(t.getDate(), originalDate);
+
+}
 
 
 TEST(TransactionTest, ToStringContainsAllFields) {

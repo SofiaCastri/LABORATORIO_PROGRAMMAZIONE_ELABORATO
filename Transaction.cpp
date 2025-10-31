@@ -109,9 +109,28 @@ void Transaction::setDate(const string& dt) {
 
 
 void Transaction::update(double newAmount, const std::string& newDescription, const std::string& newDate) {
-    setAmount(newAmount);
-    setDescription(newDescription);
-    setDate(newDate);
+    // Salva i valori attuali (per eventuale rollback)
+    double oldAmount = amount;
+    std::string oldDescription = description;
+    std::string oldDate = date;
+
+    try {
+
+        setAmount(newAmount);
+        setDescription(newDescription);
+        setDate(newDate);
+    }
+    catch (const std::exception& e) {
+
+        std::cerr << "Update fallito: " << e.what() << std::endl;
+        amount = oldAmount;
+        description = oldDescription;
+        date = oldDate;
+
+        std::cerr << "Transazione NON modificata. Stato ripristinato ai valori precedenti." << std::endl;
+
+        throw;
+    }
 }
 
 
