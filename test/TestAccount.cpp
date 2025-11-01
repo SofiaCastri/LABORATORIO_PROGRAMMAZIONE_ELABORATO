@@ -289,6 +289,7 @@ TEST(AccountTest, WriteTransactionsToFile) {
     std::ifstream file(filename);
     ASSERT_TRUE(file.is_open());
 
+    // Leggi tutti i caratteri del file, dall’inizio fino alla fine, e mettili nella stringa content.
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -313,8 +314,7 @@ TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
 
     std::ifstream file(filename);
     ASSERT_TRUE(file.is_open());
-    std::string content((std::istreambuf_iterator<char>(file)),
-                        std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(file)),std::istreambuf_iterator<char>());
     file.close();
 
     // Controllo che il file sia vuoto
