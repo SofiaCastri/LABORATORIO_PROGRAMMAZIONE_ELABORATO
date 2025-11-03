@@ -174,8 +174,7 @@ double Account::simulateCompoundInterest(double monthlySaving, double annualRate
 void Account::writeTransactionsToFile(const std::string& filename) const {
     std::ofstream file(filename, std::ios::app); // apre il file in modalità append
     if (!file.is_open()) {
-        std::cerr << "Impossibile aprire il file: " << filename << std::endl;
-        return;
+        if (!file.is_open()) throw std::runtime_error("Impossibile aprire il file " + filename);
     }
 
     if (transactions.empty()) {
