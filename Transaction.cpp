@@ -19,13 +19,7 @@ Transaction::Transaction(double amt, TransactionType t, const std::string &desc)
         throw std::invalid_argument("Importo deve essere positivo");
     }
 
-    // Imposta la data corrente come stringa leggibile
-    auto now = std::chrono::system_clock::now(); // Prende il tempo corrente dal sistema
-    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
-
-    std::stringstream ss;// Creo uno stream per formattare la data
-    ss << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S");
-    date = ss.str(); // Memorizza la data formattata nella variabile membro
+    date = getCurrentTime(); //imposta la data corrente
 }
 
 
@@ -52,6 +46,17 @@ std::string Transaction::getDescription() const {
 
 void Transaction::resetIdCounter(int startFrom) noexcept {
     nextId = startFrom;
+}
+
+
+std::string Transaction::getCurrentTime() {
+    // Ottiene la data e ora correnti come stringa formattata "YYYY-MM-DD HH:MM:SS"
+
+    auto now = std::chrono::system_clock::now(); // Prende l'istante corrente dal sistema
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now); //converto in time_t
+    std::stringstream ss;// Creo uno stream per formattare la data
+    ss << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S");
+    return ss.str();
 }
 
 

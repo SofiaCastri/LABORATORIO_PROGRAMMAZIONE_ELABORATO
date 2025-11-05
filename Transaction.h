@@ -23,6 +23,7 @@ public:
     TransactionType getType() const;
     std::string getDate() const;
     std::string getDescription() const;
+    std::string getCurrentTime();
 
     // Metodo statico per resettare
     static void resetIdCounter(int startFrom = 0) noexcept;
