@@ -68,9 +68,11 @@ void Transaction::setAmount(double amt) {
     amount = amt;
 }
 
+
 void Transaction::setDescription(const std::string &descpt) {
     Transaction::description = descpt;
 }
+
 
 void Transaction::setTransactionId(const int Id) {
     Transaction::transactionId = Id;
@@ -83,23 +85,23 @@ void Transaction::setTransactionId(const int Id) {
 }
 
 
-
 void Transaction::setDate(const string& dt) {
 
     // Controllo validità della nuova data
     std::tm tm = {};
     std::istringstream ss(dt);
-
     ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
 
     if (ss.fail()) {
-    throw std::invalid_argument("Formato del date non valido");
+    throw std::invalid_argument("Formato della data non è valido");
     }
+
     std::tm original = tm;
 
     tm.tm_isdst = -1;  // Lascia che il sistema decida se è ora legale
+
     if (mktime(&tm) == -1) {
-    throw std::invalid_argument("Valori del date non validi");
+    throw std::invalid_argument("La data inserita non è valida");
     }
 
     if (tm.tm_mday != original.tm_mday ||
@@ -139,16 +141,14 @@ void Transaction::update(double newAmount, const std::string& newDescription, co
 }
 
 
-
 std::string Transaction::transactiontoString() const {
-    std::ostringstream oss;
-    oss << "Transaction:\n"
-        << "ID: " << transactionId << "\n"
-        << "Amount: " << amount << "\n"
-        << "Type: " << (type == TransactionType::Incoming ? "Incoming" : "Outgoing") << "\n"
-        << "Date: " << date << "\n"
-        << "Description: " << description << "\n";
-    return oss.str();
+    std::string info = "Transaction:\n";
+    info += "ID: " + std::to_string(transactionId) + "\n";
+    info += "Amount: " + std::to_string(amount) + "\n";
+    info += "Type: " + std::string(type == TransactionType::Incoming ? "Incoming" : "Outgoing") + "\n";
+    info += "Date: " + date + "\n";
+    info += "Description: " + description + "\n";
+    return info;
 }
 
 

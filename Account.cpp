@@ -190,24 +190,22 @@ void Account::writeTransactionsToFile(const std::string& filename) const {
 }
 
 
-
 std::string Account::accountToString() const {
-    std::ostringstream oss;
-    oss << "Account Info\n";
-    oss << "Name: " << name << "\n";
-    oss << "IBAN: " << iban << "\n";
-    oss << "Balance: " << balance << "\n";
+    std::string info = "Account Info\n";
+    info += "Name: " + name + "\n";
+    info += "IBAN: " + iban + "\n";
+    info += "Balance: " + std::to_string(balance) + "\n";
 
     if (!transactions.empty()) {
-        oss << "Transactions:\n\n";
+        info += "Transactions:\n\n";
         for (const auto& t : transactions) {
-            oss << t.transactiontoString() << "\n----------------------\n";
+            info += t.transactiontoString() + "\n----------------------\n";
         }
     } else {
-        oss << "Nessuna transazione registrata.\n";
+        info += "Nessuna transazione registrata.\n";
     }
 
-    return oss.str();
+    return info;
 }
 
 void Account::writeAccountToFile(const std::string& filename) const {
