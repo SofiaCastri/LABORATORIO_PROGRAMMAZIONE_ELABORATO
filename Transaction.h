@@ -23,6 +23,8 @@ public:
     TransactionType getType() const;
     std::string getDate() const;
     std::string getDescription() const;
+
+
     std::string getCurrentTime();
 
     // Metodo statico per resettare
@@ -32,7 +34,7 @@ public:
     void setAmount(double amt);
     void setDescription(const std::string& descpt) ;
     void setTransactionId(const int Id);
-    void setDate(const string& dt);
+    void setDate(const std::string& dt);
 
 
     // Aggiornamento completo della transazione

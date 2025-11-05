@@ -85,7 +85,7 @@ void Transaction::setTransactionId(const int Id) {
 }
 
 
-void Transaction::setDate(const string& dt) {
+void Transaction::setDate(const std::string& dt) {
 
     // Controllo validità della nuova data
     std::tm tm = {};
