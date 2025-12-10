@@ -256,10 +256,10 @@ void Account::readTransactionLine(const std::string& line, int& id, double& amou
     else if (line.find("----------------------") != std::string::npos) {
         // fine di una transazione completa
         if (id != 0 && amount > 0.0) {
-            Transaction t(amount, type, description);
-            t.setDate(date);
-            t.setTransactionId(id); //imposto l'ID letto da file
             try {
+                Transaction t(amount, type, description);
+                t.setDate(date);
+                t.setTransactionId(id); //imposto l'ID letto da file
                 addTransaction(t);
                 std::cout << "Aggiunta transazione ID: " << id << std::endl;
             } catch (const std::runtime_error& e) {
