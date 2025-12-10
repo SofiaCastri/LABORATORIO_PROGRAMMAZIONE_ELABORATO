@@ -262,7 +262,7 @@ void Account::readTransactionLine(const std::string& line, int& id, double& amou
                 t.setTransactionId(id); //imposto l'ID letto da file
                 addTransaction(t);
                 std::cout << "Aggiunta transazione ID: " << id << std::endl;
-            } catch (const std::runtime_error& e) {
+            } catch (const std::exception& e) {
                 std::cerr << "Transazione ID " << id << " saltata: " << e.what() << std::endl;
             }
         }
