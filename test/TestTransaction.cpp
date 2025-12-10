@@ -57,7 +57,7 @@ TEST(TransactionTest, SetDateValid) {
 TEST(TransactionTest, SetDateInvalidFormatThrows) {
     Transaction::resetIdCounter();
     Transaction t( 150.0, TransactionType::Incoming, "Test");
-    EXPECT_THROW(t.setDate("24-10-2025 14:30"), std::invalid_argument);
+    EXPECT_THROW(t.setDate("24-10-2025 14:30:00"), std::invalid_argument);
 }
 //controllo setDate: data 30 febbraio
 TEST(TransactionTest, SetDateInvalidValueThrows) {

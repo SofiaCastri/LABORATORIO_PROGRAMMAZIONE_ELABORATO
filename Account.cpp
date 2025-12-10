@@ -92,7 +92,10 @@ std::vector<Transaction> Account::findTransactionsBeforeDate(const std::string& 
     if (mktime(&target_tm) == -1 ||
         target_tm.tm_mday != original.tm_mday ||
         target_tm.tm_mon  != original.tm_mon  ||
-        target_tm.tm_year != original.tm_year) {
+        target_tm.tm_year != original.tm_year ||
+        target_tm.tm_hour != original.tm_hour ||
+        target_tm.tm_min  != original.tm_min  ||
+        target_tm.tm_sec  != original.tm_sec) {
         throw std::invalid_argument("La data inserita non è valida (es. 30 febbraio)");
     }
 

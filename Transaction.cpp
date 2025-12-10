@@ -106,7 +106,10 @@ void Transaction::setDate(const std::string& dt) {
 
     if (tm.tm_mday != original.tm_mday ||
         tm.tm_mon  != original.tm_mon  ||
-        tm.tm_year != original.tm_year) {
+        tm.tm_year != original.tm_year ||
+        tm.tm_hour != original.tm_hour ||
+        tm.tm_min  != original.tm_min  ||
+        tm.tm_sec  != original.tm_sec) {
         throw std::invalid_argument("La data inserita non è valida");
     }
 
