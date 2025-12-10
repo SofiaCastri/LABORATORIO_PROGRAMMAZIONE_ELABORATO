@@ -472,3 +472,28 @@ TEST(AccountLoadTest, OutgoingExceedingBalance_Skipped) {
 
     std::remove(fname.c_str());
 }
+
+// Test che verifica che transazione con data non valida sia saltata
+TEST(AccountLoadTest, InvalidDateTransaction_Skipped) {
+    Transaction::resetIdCounter();
+    std::string fname = "test_invalid_date.txt";
+    // Creo manualmente una transazione con data NON valida
+    std::ofstream file(fname);
+    file << "Transaction:\n";
+    file << "ID: 1\n";
+    file << "Amount: 100\n";
+    file << "Type: Incoming\n";
+    file << "Date: 2025-02-30 10:00:00\n";   // DATA IMPOSSIBILE
+    file << "Description: Invalid date test\n";
+    file << "----------------------\n";
+    file.close();
+
+    Account acc("TestUser", "IT000", 500.0);
+
+    // Carico dal file
+    acc.loadTransactionsFromFile(fname);
+    EXPECT_EQ(acc.getTransactionSize(), 0);
+    EXPECT_DOUBLE_EQ(acc.getBalance(), 500.0);
+
+    std::remove(fname.c_str());
+}
