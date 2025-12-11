@@ -17,9 +17,7 @@ TEST(AccountTest, ConstructorAndGetters) {
 
 // Prova a creare un account con saldo negativo
 TEST(AccountConstructorTest, NegativeInitialBalanceThrows) {
-    EXPECT_THROW({
-                     Account acc("Mario Rossi", "IT1234567890", -100.0);
-                 }, std::invalid_argument);
+    EXPECT_THROW({Account acc("Mario Rossi", "IT1234567890", -100.0);}, std::invalid_argument);
 }
 
 // Test addTransaction con Incoming
@@ -58,9 +56,7 @@ TEST(AccountTest, AddTransactionOutgoingInsufficientBalanceThrows) {
 
     EXPECT_THROW(acc.addTransaction(t), std::runtime_error);
 
-
     EXPECT_DOUBLE_EQ(acc.getBalance(), 100.0);
-
     auto transactions = acc.searchTransactionByType(TransactionType::Outgoing);
     EXPECT_TRUE(transactions.empty());
 }
@@ -282,7 +278,7 @@ TEST(AccountTest, WriteTransactionsToFile) {
     acc.addTransaction(t2);
 
     std::string filename = "file_transazioni_account_test.txt";
-    std::ofstream(filename, std::ios::trunc).close();// Pulisco eventuale file precedente
+    std::ofstream(filename, std::ios::trunc).close();// se file esiste già viene svuotato, altrimento lo creo vuoto. dopo lo chiudo
 
     acc.writeTransactionsToFile(filename);
     ASSERT_TRUE(std::filesystem::exists(filename));
@@ -311,16 +307,16 @@ TEST(AccountTest, WriteTransactionsToFile_EmptyVector) {
     acc.writeTransactionsToFile(filename);
 
     ASSERT_TRUE(std::filesystem::exists(filename));
-
     std::ifstream file(filename);
     ASSERT_TRUE(file.is_open());
     std::string content((std::istreambuf_iterator<char>(file)),std::istreambuf_iterator<char>());
     file.close();
 
-    // Controllo che il file sia vuoto
+    // Controllo che content non contenga nessun carattere
     EXPECT_TRUE(content.empty());
 }
 
+//test per controllare che AccountToString
 TEST(AccountTest, AccountToStringWithTransactions) {
     Transaction::resetIdCounter();
     Account acc("Alice", "IT12345", 1000.0);
@@ -345,6 +341,8 @@ TEST(AccountTest, AccountToStringWithTransactions) {
     EXPECT_NE(str.find("Outgoing"), std::string::npos);
 }
 
+
+//test per controllare che AccountToString: senza transazioni
 TEST(AccountTest, AccountToStringNoTransactions) {
     Account acc("Bob", "IT67890", 500.0);
 
@@ -359,6 +357,7 @@ TEST(AccountTest, AccountToStringNoTransactions) {
     EXPECT_NE(str.find("Nessuna transazione registrata"), std::string::npos);
 }
 
+
 // Test: scrittura account con transazioni
 TEST(AccountTest, WriteAccountToFileWithTransactions) {
     Transaction::resetIdCounter();
@@ -370,15 +369,11 @@ TEST(AccountTest, WriteAccountToFileWithTransactions) {
     acc.addTransaction(t2);
 
     std::string filename = "test_account_with_transactions.txt";
-    std::ofstream(filename, std::ios::trunc).close(); // reset file
+    std::ofstream(filename, std::ios::trunc).close(); // se file esiste già viene svuotato, altrimento lo creo vuoto. dopo lo chiudo
 
-    // Scrivo su file
     acc.writeAccountToFile(filename);
 
-    // Verifico che il file esista
     ASSERT_TRUE(std::filesystem::exists(filename));
-
-    // Leggo il contenuto
     std::ifstream file(filename);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
@@ -396,12 +391,11 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
     Account acc("Bob", "IT67890", 500.0);
 
     std::string filename = "test_account_without_transactions.txt";
-    std::ofstream(filename, std::ios::trunc).close(); // reset file
+    std::ofstream(filename, std::ios::trunc).close(); // se file esiste già viene svuotato, altrimento lo creo vuoto. dopo lo chiudo
 
     acc.writeAccountToFile(filename);
 
     ASSERT_TRUE(std::filesystem::exists(filename));
-
     std::ifstream file(filename);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
@@ -414,11 +408,11 @@ TEST(AccountTest, WriteAccountToFileWithoutTransactions) {
     EXPECT_NE(content.find("Nessuna transazione registrata"), std::string::npos);
 }
 
-//caso transazioni duplicata
+//Test lettura transazioni: caso transazioni duplicata
 TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
     Transaction::resetIdCounter();
     std::string filename = "test_duplicates.txt";
-    std::ofstream(filename, std::ios::trunc).close();
+    std::ofstream(filename, std::ios::trunc).close();// se file esiste già viene svuotato, altrimento lo creo vuoto. dopo lo chiudo
 
     Transaction t1( 100.0, TransactionType::Incoming, "Bonus");
     Transaction t2( 25.0, TransactionType::Outgoing, "Caffè");
@@ -428,12 +422,12 @@ TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
 
     Account account("Luigi", "IT456", 500.0);
 
-    // Prima caricamento
+    // Prima lettura da file
     account.loadTransactionsFromFile(filename);
     EXPECT_EQ(account.getTransactionSize(), 2);
     EXPECT_DOUBLE_EQ(account.getBalance(), 575.0);
 
-    // Secondo caricamento - le transazioni dovrebbero essere saltate
+    // seconda lettura, stesso file
     account.loadTransactionsFromFile(filename);
     EXPECT_EQ(account.getTransactionSize(), 2); // Stesso numero, no duplicati
     EXPECT_DOUBLE_EQ(account.getBalance(), 575.0); // Saldo invariato
@@ -441,49 +435,51 @@ TEST(AccountTest, LoadTransactionsFromFileAvoidDuplicates) {
     std::remove(filename.c_str());
 }
 
-// File vuoto → nessuna transazione caricata, saldo invariato
+// Lettura da un file vuoto: nessuna transazione caricata, saldo invariato
 TEST(AccountLoadTest, EmptyFile) {
-    std::string fname = "test_empty.txt";
-    std::ofstream(fname, std::ios::trunc).close();
+    std::string filename = "test_empty.txt";
+    std::ofstream(filename, std::ios::trunc).close();
+
     Account acc("Test", "IT000", 500.0);
 
-    acc.loadTransactionsFromFile(fname);
+    acc.loadTransactionsFromFile(filename);
 
     EXPECT_EQ(acc.getTransactionSize(), 0);
     EXPECT_DOUBLE_EQ(acc.getBalance(), 500.0);
 
-    std::remove(fname.c_str());
+    std::remove(filename.c_str());
 }
 
-// Test che verifica che le transazioni in uscita che superano il saldo vengano saltate
+// Test lettura: transazioni in uscita che superano il saldo vengano saltate
 TEST(AccountLoadTest, OutgoingExceedingBalance_Skipped) {
     Transaction::resetIdCounter();
-    std::string fname = "test_overout.txt";
+    std::string filename = "test_overout.txt";
 
     Transaction t1( 200.0, TransactionType::Outgoing, "Big outgoing");
-    t1.writeTransactionToFile(fname);
+    t1.writeTransactionToFile(filename);
 
     Account acc("Test", "IT000", 100.0);
-    acc.loadTransactionsFromFile(fname);
+    acc.loadTransactionsFromFile(filename);
 
     // La transazione dovrebbe essere saltata, quindi saldo e numero transazioni invariati
     EXPECT_EQ(acc.getTransactionSize(), 0);
     EXPECT_DOUBLE_EQ(acc.getBalance(), 100.0);
 
-    std::remove(fname.c_str());
+    std::remove(filename.c_str());
 }
 
 // Test che verifica che transazione con data non valida sia saltata
 TEST(AccountLoadTest, InvalidDateTransaction_Skipped) {
     Transaction::resetIdCounter();
     std::string fname = "test_invalid_date.txt";
-    // Creo manualmente una transazione con data NON valida
+
+    // Creo manualmente una transazione con data NON valida (non posso usare il setDate)
     std::ofstream file(fname);
     file << "Transaction:\n";
     file << "ID: 1\n";
     file << "Amount: 100\n";
     file << "Type: Incoming\n";
-    file << "Date: 2025-02-30 10:00:00\n";   // DATA IMPOSSIBILE
+    file << "Date: 2025-02-30 10:00:00\n";
     file << "Description: Invalid date test\n";
     file << "----------------------\n";
     file.close();
@@ -492,6 +488,32 @@ TEST(AccountLoadTest, InvalidDateTransaction_Skipped) {
 
     // Carico dal file
     acc.loadTransactionsFromFile(fname);
+    EXPECT_EQ(acc.getTransactionSize(), 0);
+    EXPECT_DOUBLE_EQ(acc.getBalance(), 500.0);
+
+    std::remove(fname.c_str());
+}
+
+// Test che verifica che una transazione SENZA ID venga saltata
+TEST(AccountLoadTest, MissingIdTransaction_Skipped) {
+    Transaction::resetIdCounter();
+    std::string fname = "test_missing_id.txt";
+
+    // Creo manualmente un file con una transazione SENZA ID
+    std::ofstream file(fname);
+    file << "Transaction:\n";
+    // NESSUN ID
+    file << "Amount: 100\n";
+    file << "Type: Incoming\n";
+    file << "Date: 2025-02-10 10:00:00\n";
+    file << "Description: Missing ID test\n";
+    file << "----------------------\n";
+    file.close();
+
+    Account acc("TestUser", "IT000", 500.0);
+    acc.loadTransactionsFromFile(fname);
+
+    // La transazione deve essere ignorata perché id è rimasto 0
     EXPECT_EQ(acc.getTransactionSize(), 0);
     EXPECT_DOUBLE_EQ(acc.getBalance(), 500.0);
 

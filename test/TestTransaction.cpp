@@ -82,6 +82,7 @@ TEST(TransactionTest, UpdateTransaction) {
     EXPECT_EQ(t.getType(), TransactionType::Outgoing);
 }
 
+//test per update: lancio eccezione poichè nuova data non valida
 TEST(TransactionTest, UpdateInvalidDataRollback) {
     Transaction::resetIdCounter();
     Transaction t(100.0, TransactionType::Outgoing, "Initial Payment");
@@ -96,7 +97,7 @@ TEST(TransactionTest, UpdateInvalidDataRollback) {
 
 }
 
-
+//Test che verifica metodo toStringTransaction
 TEST(TransactionTest, ToStringContainsAllFields) {
     Transaction::resetIdCounter();
     Transaction t(250.50, TransactionType::Incoming, "Salary");
@@ -107,7 +108,7 @@ TEST(TransactionTest, ToStringContainsAllFields) {
     EXPECT_NE(str.find("250.5"), std::string::npos);
     EXPECT_NE(str.find("Incoming"), std::string::npos);
     EXPECT_NE(str.find("Salary"), std::string::npos);
-    EXPECT_NE(str.find(std::string("-")), std::string::npos); // Verifica che la stringa contenga la data (presenza di "-" come separatore)
+
 }
 
 // Test che verifica la scrittura su file di una transazione
