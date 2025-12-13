@@ -114,7 +114,7 @@ void Transaction::setDate(const std::string& dt) {
     }
 
 
-    Transaction::date = dt;
+    date = dt;
 }
 
 
