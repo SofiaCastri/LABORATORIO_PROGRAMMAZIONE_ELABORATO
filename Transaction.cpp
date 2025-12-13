@@ -44,7 +44,7 @@ std::string Transaction::getDescription() const {
     return description;
 }
 
-void Transaction::resetIdCounter(int startFrom) noexcept {
+void Transaction::resetIdCounter(int startFrom) {
     nextId = startFrom;
 }
 

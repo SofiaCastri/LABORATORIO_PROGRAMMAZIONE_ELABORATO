@@ -28,7 +28,7 @@ public:
     std::string getCurrentTime();
 
     // Metodo statico per resettare
-    static void resetIdCounter(int startFrom = 0) noexcept;
+    static void resetIdCounter(int startFrom = 0);
 
     // setter
     void setAmount(double amt);
