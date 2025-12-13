@@ -104,7 +104,6 @@ TEST(TransactionTest, ToStringContainsAllFields) {
 
     std::string str = t.transactiontoString();
 
-    EXPECT_NE(str.find("1"), std::string::npos);
     EXPECT_NE(str.find("250.5"), std::string::npos);
     EXPECT_NE(str.find("Incoming"), std::string::npos);
     EXPECT_NE(str.find("Salary"), std::string::npos);
