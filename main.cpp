@@ -30,6 +30,7 @@ int main() {
         Account mario("Mario Rossi", "IT99A0123456789012345678901", 1500.0);
         Account laura("Laura Bianchi", "IT99B9876543210987654321098", 800.0);
         std::cout << "conto di: "<<mario.getName()<<" Saldo iniziale: " << mario.getBalance() << std::endl;
+        std::cout << "conto di: "<<laura.getName()<<" Saldo iniziale: " << laura.getBalance() << std::endl;
 
 
         cout << "\nConti creati." << endl;
