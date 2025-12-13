@@ -280,9 +280,9 @@ void Account::loadTransactionsFromFile(const std::string& filename) {
 
     std::string line;
     //creo variabili temporanee per i parametri della transazione
-    int id = 0;
-    double amount = 0.0;
-    TransactionType type = TransactionType::Outgoing;
+    int id;
+    double amount;
+    TransactionType type;
     std::string date, description;
 
     bool readingTransaction = false;
