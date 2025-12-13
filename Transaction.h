@@ -25,7 +25,7 @@ public:
     std::string getDescription() const;
 
 
-    std::string getCurrentTime();
+    static std::string getCurrentTime();
 
     // Metodo statico per resettare
     static void resetIdCounter(int startFrom = 0);
@@ -33,7 +33,7 @@ public:
     // setter
     void setAmount(double amt);
     void setDescription(const std::string& descpt) ;
-    void setTransactionId(const int Id);
+    void setTransactionId(int Id);
     void setDate(const std::string& dt);
 
 

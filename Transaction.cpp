@@ -74,7 +74,7 @@ void Transaction::setDescription(const std::string &descpt) {
 }
 
 
-void Transaction::setTransactionId(const int Id) {
+void Transaction::setTransactionId(int Id) {
     Transaction::transactionId = Id;
 
     // Mantengo il contatore coerente: se carico da file con ID alti,
